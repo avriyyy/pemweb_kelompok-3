@@ -1,0 +1,93 @@
+<div class="min-h-screen w-full flex flex-col lg:flex-row">
+  <div class="w-full lg:w-1/2 bg-dark px-6 sm:px-10 lg:px-16 py-8 lg:py-16 flex flex-col gap-8 lg:gap-0 lg:justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <span class="w-10 h-10 rounded-xl bg-primary text-dark font-bold text-[20px] flex items-center justify-center">T</span>
+      <span class="text-primary font-bold text-[22px]">TokTik</span>
+    </a>
+
+    <div class="flex flex-col gap-4 lg:gap-6 lg:max-w-md">
+      <h1 class="text-primary font-bold text-[36px] sm:text-[44px] lg:text-[56px] leading-[1.05]">Daftar<br />Sekarang.</h1>
+      <p class="text-primary text-[15px] sm:text-[16px] leading-[1.5] opacity-70">Buat akun Anda dalam hitungan detik dan mulai nikmati semua yang TokTik tawarkan.</p>
+    </div>
+
+    <p class="text-primary text-[13px] opacity-50 hidden lg:block">© 2026 TokTik. Hak cipta dilindungi.</p>
+  </div>
+
+  <div class="w-full lg:w-1/2 bg-primary px-5 sm:px-10 lg:px-24 py-10 lg:py-16 flex flex-col justify-center items-center">
+    <div class="w-full max-w-[480px] flex flex-col gap-5 lg:gap-6">
+      <div class="flex flex-col gap-2">
+        <h2 class="text-dark font-bold text-[28px] sm:text-[32px]">Buat Akun</h2>
+        <p class="text-text-secondary text-[14px] sm:text-[15px]">Isi data Anda untuk mulai menggunakan TokTik.</p>
+      </div>
+
+      {{if .Error}}
+      <div class="flex items-start gap-2 bg-white border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3">
+        <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+        <span>{{.Error}}</span>
+      </div>
+      {{end}}
+
+      <form method="POST" action="/register" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+          <label for="nama" class="text-dark text-[13px] font-semibold">Nama Lengkap</label>
+          <div class="flex items-center gap-3 h-[48px] sm:h-[52px] px-4 bg-surface border border-border rounded-xl focus-within:border-primary transition-colors">
+            <i data-lucide="user" class="w-5 h-5 text-text-secondary flex-shrink-0"></i>
+            <input id="nama" name="nama" type="text" required placeholder="Nama lengkap Anda"
+              class="flex-1 min-w-0 bg-transparent text-dark text-[15px] placeholder:text-text-secondary focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="email" class="text-dark text-[13px] font-semibold">Email</label>
+          <div class="flex items-center gap-3 h-[48px] sm:h-[52px] px-4 bg-surface border border-border rounded-xl focus-within:border-primary transition-colors">
+            <i data-lucide="mail" class="w-5 h-5 text-text-secondary flex-shrink-0"></i>
+            <input id="email" name="email" type="email" required placeholder="anda@contoh.com"
+              class="flex-1 min-w-0 bg-transparent text-dark text-[15px] placeholder:text-text-secondary focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="password" class="text-dark text-[13px] font-semibold">Kata Sandi</label>
+          <div class="flex items-center justify-between gap-3 h-[48px] sm:h-[52px] px-4 bg-surface border border-border rounded-xl focus-within:border-primary transition-colors">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <i data-lucide="lock" class="w-5 h-5 text-text-secondary flex-shrink-0"></i>
+              <input id="password" name="password" type="password" required placeholder="••••••••••"
+                class="flex-1 min-w-0 bg-transparent text-dark text-[15px] placeholder:text-text-secondary focus:outline-none" />
+            </div>
+            <button type="button" onclick="togglePassword('password', this)" class="text-text-secondary hover:text-dark transition flex-shrink-0">
+              <i data-lucide="eye" class="w-5 h-5"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit"
+          class="flex items-center justify-center gap-2 h-[48px] sm:h-[52px] bg-dark text-primary font-semibold text-[15px] rounded-xl hover:bg-dark-soft transition">
+          <span>Buat Akun</span>
+          <i data-lucide="arrow-right" class="w-[18px] h-[18px]"></i>
+        </button>
+      </form>
+
+      <div class="flex items-center justify-center gap-1.5 flex-wrap">
+        <span class="text-text-secondary text-[14px]">Sudah punya akun?</span>
+        <a href="/login" class="text-dark text-[14px] font-semibold hover:underline">Masuk</a>
+      </div>
+    </div>
+
+    <p class="text-dark/60 text-[12px] mt-8 lg:hidden">© 2026 TokTik. Hak cipta dilindungi.</p>
+  </div>
+</div>
+
+<script>
+function togglePassword(id, btn) {
+  const input = document.getElementById(id);
+  const icon = btn.querySelector('[data-lucide]');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.setAttribute('data-lucide', 'eye-off');
+  } else {
+    input.type = 'password';
+    icon.setAttribute('data-lucide', 'eye');
+  }
+  if (window.lucide) window.lucide.createIcons();
+}
+</script>

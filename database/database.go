@@ -12,7 +12,8 @@ var DB *gorm.DB
 func Connect() {
 	// Ganti dengan kredensial MySQL Anda:
 	// user:password@tcp(127.0.0.1:3306)/nama_database
-	dsn := "root:@tcp(43.157.228.4:3306)/kel_3a?charset=utf8mb4&parseTime=True&loc=Local"
+	// dsn := "toktik:Toktik123!@tcp(43.157.228.4:3306)/toktik?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:230405@tcp(43.134.3.156:3306)/toktik?charset=utf8mb4&parseTime=True&loc=Local"
 	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Gagal koneksi ke database! \n", err)
