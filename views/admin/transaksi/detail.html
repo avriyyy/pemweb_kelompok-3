@@ -1,0 +1,105 @@
+<div class="flex flex-col gap-5 sm:gap-6 px-5 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-8">
+  <div class="flex flex-col gap-1.5">
+    <a href="/admin/transaksi" class="text-primary/60 text-[10px] sm:text-[11px] tracking-[1.5px] font-bold hover:text-primary transition w-fit">TRANSAKSI > DETAIL</a>
+    <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Detail Transaksi</h1>
+    <p class="text-primary/70 text-[12px] sm:text-[14px] font-mono">{{.Trx.Kode}}</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+    <div class="lg:col-span-2 bg-dark border border-primary/40 rounded-2xl p-5 sm:p-6 lg:p-7 flex flex-col gap-5 sm:gap-6">
+      <div class="flex items-center gap-3 sm:gap-4 pb-4 border-b border-primary/20">
+        <div class="relative {{.Trx.FilmBg}} w-14 h-20 sm:w-16 sm:h-24 rounded-lg flex-shrink-0 overflow-hidden">
+          <img src="https://picsum.photos/seed/{{.Trx.ID}}-detail/200/300" alt="{{.Trx.Film}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />
+        </div>
+        <div class="flex flex-col gap-1 min-w-0">
+          <h2 class="text-primary font-extrabold text-[16px] sm:text-[18px] truncate">{{.Trx.Film}}</h2>
+          <p class="text-primary/60 text-[12px]">{{.Trx.Items}}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div class="flex flex-col gap-1">
+          <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1px]">KODE BOOKING</span>
+          <span class="text-primary font-mono text-[12px] sm:text-[13px]">{{.Trx.Kode}}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1px]">TANGGAL</span>
+          <span class="text-primary text-[12px] sm:text-[13px]">{{.Trx.Tanggal}}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1px]">NAMA USER</span>
+          <span class="text-primary text-[12px] sm:text-[13px] font-semibold">{{.Trx.Nama}}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1px]">METODE BAYAR</span>
+          <span class="text-primary text-[12px] sm:text-[13px]">{{.Trx.Metode}}</span>
+        </div>
+      </div>
+
+      <div class="h-px bg-primary/20"></div>
+
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <span class="text-primary/80 text-[12px] sm:text-[13px]">Tiket</span>
+          <span class="text-primary text-[12px] sm:text-[13px] font-semibold">Rp {{.Trx.Total}}</span>
+        </div>
+      </div>
+
+      <div class="h-px bg-primary/20"></div>
+
+      <div class="flex items-center justify-between">
+        <span class="text-primary font-bold text-[14px] sm:text-[15px]">Total Bayar</span>
+        <span class="text-primary font-extrabold text-[16px] sm:text-[18px]">Rp {{.Trx.Total}}</span>
+      </div>
+    </div>
+
+    <div class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-6 flex flex-col gap-4">
+      <h3 class="text-primary font-bold text-[14px] sm:text-[16px]">Status Transaksi</h3>
+      {{if eq .Trx.Status "Selesai"}}
+      <div class="bg-primary/10 border border-primary/30 rounded-xl p-4 flex items-center gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+          <i data-lucide="check" class="w-4 h-4 sm:w-5 sm:h-5 text-dark"></i>
+        </div>
+        <div>
+          <p class="text-primary font-bold text-[12px] sm:text-[13px]">Pembayaran Selesai</p>
+          <p class="text-primary/60 text-[10px] sm:text-[11px]">Dana telah diterima</p>
+        </div>
+      </div>
+      {{else if eq .Trx.Status "Menunggu"}}
+      <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 flex items-center gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-yellow-500 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-dark"></i>
+        </div>
+        <div>
+          <p class="text-primary font-bold text-[12px] sm:text-[13px]">Menunggu Pembayaran</p>
+          <p class="text-primary/60 text-[10px] sm:text-[11px]">Segera selesaikan pembayaran</p>
+        </div>
+      </div>
+      {{else}}
+      <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center gap-3">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5 text-dark"></i>
+        </div>
+        <div>
+          <p class="text-primary font-bold text-[12px] sm:text-[13px]">Transaksi Batal</p>
+          <p class="text-primary/60 text-[10px] sm:text-[11px]">Pembayaran tidak berhasil</p>
+        </div>
+      </div>
+      {{end}}
+
+      <div class="h-px bg-primary/20"></div>
+
+      <h3 class="text-primary font-bold text-[14px] sm:text-[16px]">Aksi</h3>
+      <div class="flex flex-col gap-2">
+        <button class="w-full h-10 sm:h-11 bg-primary text-dark font-bold text-[12px] sm:text-[13px] rounded-lg hover:bg-primary-hover transition flex items-center justify-center gap-2">
+          <i data-lucide="download" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Download Struk</span>
+        </button>
+        <button class="w-full h-10 sm:h-11 bg-dark-soft border border-primary/30 text-primary font-bold text-[12px] sm:text-[13px] rounded-lg hover:bg-dark-elevated transition flex items-center justify-center gap-2">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+          <span>Kirim Ulang Tiket</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

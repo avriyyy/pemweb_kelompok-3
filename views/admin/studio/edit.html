@@ -1,0 +1,66 @@
+<div class="flex flex-col gap-5 sm:gap-6 px-5 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-8">
+  <div class="flex flex-col gap-1.5">
+    <a href="/admin/studio" class="text-primary/60 text-[10px] sm:text-[11px] tracking-[1.5px] font-bold hover:text-primary transition w-fit">STUDIO > EDIT STUDIO</a>
+    <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Edit Studio</h1>
+    <p class="text-primary/70 text-[12px] sm:text-[14px]">Perbarui informasi studio "{{.Studio.Nama}}".</p>
+  </div>
+
+  <form method="POST" action="/admin/studio/edit/{{.ID}}" class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-4 sm:gap-5">
+    <div class="flex flex-col gap-1.5">
+      <div class="flex items-center gap-1">
+        <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">NAMA STUDIO</label>
+        <span class="text-primary opacity-50 text-[11px]">*</span>
+      </div>
+      <input name="nama" type="text" required value="{{.Studio.Nama}}"
+        class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors" />
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center gap-1">
+          <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">JUMLAH BARIS</label>
+          <span class="text-primary opacity-50 text-[11px]">*</span>
+        </div>
+        <input name="baris" type="number" required min="1" max="20" value="{{.Studio.Baris}}"
+          class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors" />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center gap-1">
+          <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">KURSI / BARIS</label>
+          <span class="text-primary opacity-50 text-[11px]">*</span>
+        </div>
+        <input name="kursi_per_baris" type="number" required min="1" max="20" value="{{.Studio.KursiPerBaris}}"
+          class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors" />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <div class="flex items-center gap-1">
+          <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">TIPE</label>
+          <span class="text-primary opacity-50 text-[11px]">*</span>
+        </div>
+        <div class="flex items-center justify-between h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
+          <select name="tipe" required class="flex-1 bg-transparent text-primary text-[12px] sm:text-[13px] focus:outline-none appearance-none">
+            <option value="Reguler" class="bg-dark" {{if eq .Studio.Tipe "Reguler"}}selected{{end}}>Reguler</option>
+            <option value="Premiere" class="bg-dark" {{if eq .Studio.Tipe "Premiere"}}selected{{end}}>Premiere</option>
+            <option value="IMAX" class="bg-dark" {{if eq .Studio.Tipe "IMAX"}}selected{{end}}>IMAX</option>
+            <option value="Dolby" class="bg-dark" {{if eq .Studio.Tipe "Dolby"}}selected{{end}}>Dolby</option>
+          </select>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-primary opacity-70 flex-shrink-0"></i>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col gap-1.5">
+      <div class="flex items-center gap-1">
+        <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">STATUS</label>
+        <span class="text-primary opacity-50 text-[11px]">*</span>
+      </div>
+      <div class="flex items-center justify-between h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
+        <span class="text-primary text-[12px] sm:text-[13px]">{{.Studio.Status}}</span>
+        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-primary opacity-70"></i>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-2.5 sm:gap-3 pt-3 sm:pt-4 border-t border-primary/20">
+      <a href="/admin/studio" class="text-primary text-[12px] sm:text-[13px] font-semibold px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg hover:bg-white/5 transition">Batal</a>
+      <button type="submit" class="bg-primary text-dark font-bold text-[12px] sm:text-[13px] rounded-lg px-4 sm:px-5 py-2.5 sm:py-3 hover:bg-primary-hover transition">Simpan Perubahan</button>
+    </div>
+  </form>
+</div>

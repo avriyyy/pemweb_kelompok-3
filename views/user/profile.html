@@ -1,0 +1,179 @@
+<section class="bg-dark px-5 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-8 flex flex-col gap-5 sm:gap-6 min-h-[calc(100vh-76px)]">
+  <div class="flex flex-col gap-1.5">
+    <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1.5px]">PENGATURAN AKUN</span>
+    <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Profil Saya</h1>
+    <p class="text-primary/70 text-[12px] sm:text-[14px]">Kelola informasi akun dan keamanan Anda.</p>
+  </div>
+
+  <form method="POST" action="/profile" id="profile-form" enctype="multipart/form-data" class="flex flex-col gap-5 sm:gap-6">
+    <div class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-5 sm:gap-6">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="user" class="w-4 h-4 text-primary opacity-60"></i>
+        <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">FOTO PROFIL</span>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
+        <div id="avatar-preview" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full {{.AvatarBg}} flex items-center justify-center flex-shrink-0 overflow-hidden">
+          <span class="text-dark font-extrabold text-[30px] sm:text-[36px]">{{.Initial}}</span>
+        </div>
+        <div class="flex-1 flex flex-col gap-2 sm:gap-2.5 min-w-0">
+          <p class="text-primary text-[12px] sm:text-[13px] font-semibold">Unggah foto baru</p>
+          <p class="text-primary/60 text-[11px] sm:text-[12px]">Format JPG, PNG. Maksimal 2MB. Jika tidak diunggah, profil menggunakan inisial nama Anda.</p>
+          <div class="flex items-center gap-2 pt-1">
+            <label class="inline-flex items-center gap-2 h-10 sm:h-11 bg-dark-soft border border-primary/40 text-primary text-[12px] sm:text-[13px] font-semibold rounded-lg px-3 sm:px-4 hover:bg-dark-elevated transition cursor-pointer">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+              <span>Pilih Foto</span>
+              <input type="file" name="avatar" accept="image/*" id="avatar-input" class="hidden" />
+            </label>
+            <button type="button" id="avatar-remove" class="inline-flex items-center gap-2 h-10 sm:h-11 text-primary/70 text-[12px] sm:text-[13px] font-semibold rounded-lg px-3 sm:px-4 hover:bg-white/5 transition">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              <span>Hapus</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-5 sm:gap-6">
+      <div class="flex items-center gap-1.5">
+        <i data-lucide="id-card" class="w-4 h-4 text-primary opacity-60"></i>
+        <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">INFORMASI PRIBADI</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center gap-1">
+            <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">NAMA LENGKAP</label>
+            <span class="text-primary opacity-50 text-[11px]">*</span>
+          </div>
+          <input name="nama" type="text" required value="{{.Nama}}" data-original="{{.Nama}}"
+            class="h-11 sm:h-12 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none focus:border-primary transition-colors" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center gap-1">
+            <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">EMAIL</label>
+            <span class="text-primary opacity-50 text-[11px]">*</span>
+          </div>
+          <input name="email" type="email" required value="{{.Email}}" data-original="{{.Email}}"
+            class="h-11 sm:h-12 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none focus:border-primary transition-colors" />
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-5 sm:gap-6">
+      <div class="flex items-center justify-between gap-3 flex-wrap">
+        <div class="flex items-center gap-1.5">
+          <i data-lucide="lock" class="w-4 h-4 text-primary opacity-60"></i>
+          <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">UBAH PASSWORD</span>
+        </div>
+        <span class="text-primary/60 text-[10px] sm:text-[11px]">Kosongkan jika tidak ingin mengubah</span>
+      </div>
+      <div class="grid grid-cols-1 gap-3 sm:gap-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">PASSWORD SEBELUMNYA</label>
+          <input name="current_password" type="password" placeholder="Masukkan password lama" data-original=""
+            class="h-11 sm:h-12 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none focus:border-primary transition-colors" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">PASSWORD BARU</label>
+            <input name="new_password" type="password" placeholder="Minimal 6 karakter" data-original="" minlength="6"
+              class="h-11 sm:h-12 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none focus:border-primary transition-colors" />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">KONFIRMASI PASSWORD BARU</label>
+            <input name="confirm_password" type="password" placeholder="Ulangi password baru" data-original="" minlength="6"
+              class="h-11 sm:h-12 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none focus:border-primary transition-colors" />
+          </div>
+        </div>
+        <p class="text-primary/60 text-[10px] sm:text-[11px]" id="password-hint"></p>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-2.5 sm:gap-3 pt-1">
+      <a href="/" class="text-primary/70 text-[12px] sm:text-[13px] font-semibold px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg hover:bg-white/5 transition">Batal</a>
+      <button type="submit" id="save-btn" disabled
+        class="bg-dark-soft text-primary/50 font-bold text-[12px] sm:text-[13px] rounded-lg px-4 sm:px-5 py-2.5 sm:py-3 transition cursor-not-allowed">
+        Simpan Perubahan
+      </button>
+    </div>
+  </form>
+</section>
+
+<script>
+(function() {
+  const form = document.getElementById('profile-form');
+  if (!form) return;
+  const saveBtn = document.getElementById('save-btn');
+  const avatarInput = document.getElementById('avatar-input');
+  const avatarPreview = document.getElementById('avatar-preview');
+  const avatarRemove = document.getElementById('avatar-remove');
+  const newPwd = form.querySelector('input[name="new_password"]');
+  const confirmPwd = form.querySelector('input[name="confirm_password"]');
+  const currentPwd = form.querySelector('input[name="current_password"]');
+  const pwdHint = document.getElementById('password-hint');
+  const initialHTML = avatarPreview.innerHTML;
+
+  function checkChanges() {
+    const inputs = form.querySelectorAll('input[data-original]');
+    let changed = false;
+    inputs.forEach(inp => {
+      if (inp.type === 'file') return;
+      if (inp.value !== inp.dataset.original) changed = true;
+    });
+    if (avatarInput && avatarInput.files && avatarInput.files.length > 0) changed = true;
+
+    const anyPwd = currentPwd.value || newPwd.value || confirmPwd.value;
+    if (anyPwd) {
+      const allFilled = currentPwd.value && newPwd.value && confirmPwd.value;
+      const match = newPwd.value === confirmPwd.value;
+      const longEnough = newPwd.value.length >= 6;
+      if (!currentPwd.value) {
+        pwdHint.textContent = '⚠ Masukkan password sebelumnya untuk verifikasi.';
+        pwdHint.className = 'text-yellow-400 text-[10px] sm:text-[11px]';
+      } else if (!longEnough) {
+        pwdHint.textContent = '⚠ Password baru minimal 6 karakter.';
+        pwdHint.className = 'text-yellow-400 text-[10px] sm:text-[11px]';
+      } else if (!match) {
+        pwdHint.textContent = '⚠ Password baru dan konfirmasi tidak cocok.';
+        pwdHint.className = 'text-red-400 text-[10px] sm:text-[11px]';
+      } else {
+        pwdHint.textContent = '✓ Password siap diubah.';
+        pwdHint.className = 'text-primary/70 text-[10px] sm:text-[11px]';
+      }
+      if (allFilled && match && longEnough) changed = true;
+    } else {
+      pwdHint.textContent = '';
+    }
+
+    if (changed) {
+      saveBtn.disabled = false;
+      saveBtn.className = 'bg-primary text-dark font-bold text-[12px] sm:text-[13px] rounded-lg px-4 sm:px-5 py-2.5 sm:py-3 hover:bg-primary-hover transition cursor-pointer';
+    } else {
+      saveBtn.disabled = true;
+      saveBtn.className = 'bg-dark-soft text-primary/50 font-bold text-[12px] sm:text-[13px] rounded-lg px-4 sm:px-5 py-2.5 sm:py-3 transition cursor-not-allowed';
+    }
+  }
+
+  form.addEventListener('input', checkChanges);
+
+  if (avatarInput) {
+    avatarInput.addEventListener('change', () => {
+      const file = avatarInput.files && avatarInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        avatarPreview.innerHTML = '<img src="' + e.target.result + '" alt="avatar" class="w-full h-full rounded-full object-cover" />';
+      };
+      reader.readAsDataURL(file);
+      checkChanges();
+    });
+  }
+
+  if (avatarRemove) {
+    avatarRemove.addEventListener('click', () => {
+      if (avatarInput) avatarInput.value = '';
+      avatarPreview.innerHTML = initialHTML;
+      checkChanges();
+    });
+  }
+})();
+</script>

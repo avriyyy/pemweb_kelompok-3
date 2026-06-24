@@ -1,0 +1,65 @@
+{{define "head"}}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{{.Title}} · TokTik</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/assets/js/tailwind.config.js"></script>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.lucide) window.lucide.createIcons();
+  });
+</script>
+
+<style>
+  :root {
+    --color-primary: #C5E384;
+    --color-dark: #200F07;
+    --color-dark-soft: #2B1810;
+    --color-dark-elevated: #36200F;
+    --color-surface: #FFFFFF;
+    --color-surface-muted: #F7F9EC;
+    --color-border-light: #E3E8D0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-dark) !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-dark-elevated) !important;
+    border-radius: 10px !important;
+    border: 2px solid var(--color-dark) !important;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary) !important;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--color-primary) !important;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: var(--color-dark) !important;
+  }
+
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-dark-elevated) var(--color-dark);
+  }
+</style>
+{{end}}

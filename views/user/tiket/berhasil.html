@@ -1,0 +1,93 @@
+<section class="bg-dark px-5 sm:px-10 lg:px-16 py-8 sm:py-10 lg:py-14 flex flex-col items-center gap-6 sm:gap-8">
+  <div class="flex flex-col items-center gap-3 sm:gap-5 text-center">
+    <div class="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full bg-primary flex items-center justify-center">
+      <i data-lucide="check" class="w-9 h-9 sm:w-12 sm:h-12 lg:w-14 lg:h-14 text-dark"></i>
+    </div>
+    <h1 class="text-primary font-extrabold text-[28px] sm:text-[34px] lg:text-[40px]">Pembayaran Berhasil!</h1>
+    <p class="text-primary text-[13px] sm:text-[15px] opacity-70 max-w-md">Tiket Anda sudah dikonfirmasi. Selamat menikmati filmnya!</p>
+  </div>
+
+  <div class="bg-dark border border-primary/30 rounded-2xl lg:rounded-[20px] p-5 sm:p-6 lg:p-8 w-full max-w-[600px] flex flex-col gap-4 sm:gap-5">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+      <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">STRUK PEMBELIAN</span>
+      <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px] opacity-70">{{.KodeBooking}}</span>
+    </div>
+
+    <div class="flex items-center gap-3 sm:gap-4">
+      <div class="bg-primary w-14 h-20 sm:w-20 sm:h-28 rounded-md sm:rounded-[10px] flex items-end p-1.5 sm:p-2 flex-shrink-0">
+        <span class="text-dark text-[9px] sm:text-[10px] font-bold opacity-70">IMAX</span>
+      </div>
+      <div class="flex flex-col gap-0.5 sm:gap-1 min-w-0">
+        <h2 class="text-primary font-extrabold text-[15px] sm:text-[18px]">Echoes of the Unknown</h2>
+        <p class="text-primary text-[11px] sm:text-[12px] opacity-60">Fiksi Ilmiah · 2j 28m</p>
+      </div>
+    </div>
+
+    <div class="h-px bg-primary/20"></div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <i data-lucide="calendar" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
+        <div class="min-w-0">
+          <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Tanggal</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">Senin, 23 Jun 2026</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
+        <div class="min-w-0">
+          <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Jam Tayang</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">18:00 WIB</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <i data-lucide="building" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
+        <div class="min-w-0">
+          <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Studio</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">Studio 4 · Reguler</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <i data-lucide="armchair" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
+        <div class="min-w-0">
+          <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Kursi</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">{{.Seats}}</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2.5 sm:gap-3 sm:col-span-2">
+        <i data-lucide="credit-card" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
+        <div class="min-w-0">
+          <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Metode Bayar</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">{{.MetodeBayar}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="h-px bg-primary/20"></div>
+
+    <div class="flex flex-col gap-1.5">
+      <div class="flex items-center justify-between">
+        <span class="text-primary text-[12px] sm:text-[13px]">{{.SeatCount}} × Kursi Regular</span>
+        <span class="text-primary text-[12px] sm:text-[13px] font-semibold">Rp {{.Subtotal}}</span>
+      </div>
+    </div>
+
+    <div class="h-px bg-primary/30"></div>
+
+    <div class="flex items-center justify-between pt-1">
+      <span class="text-primary font-extrabold text-[14px] sm:text-[16px]">Total Dibayar</span>
+      <span class="text-primary font-extrabold text-[16px] sm:text-[18px]">Rp {{.Total}}</span>
+    </div>
+  </div>
+
+  <div class="flex flex-row items-center gap-2 sm:gap-4 w-full max-w-[600px]">
+    <a href="/" class="bg-primary text-dark font-bold text-[12px] sm:text-[15px] rounded-lg sm:rounded-xl px-3 sm:px-7 py-3 sm:py-4 flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-primary-hover transition flex-1 whitespace-nowrap min-w-0">
+      <i data-lucide="house" class="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] flex-shrink-0"></i>
+      <span class="truncate">Kembali ke Beranda</span>
+    </a>
+    <a href="/tiket-saya" class="bg-dark text-primary font-bold text-[12px] sm:text-[15px] rounded-lg sm:rounded-xl px-3 sm:px-7 py-3 sm:py-4 border border-primary/30 flex items-center justify-center gap-1.5 sm:gap-2 hover:bg-white/5 transition flex-1 whitespace-nowrap min-w-0">
+      <i data-lucide="ticket" class="w-3.5 h-3.5 sm:w-[18px] sm:h-[18px] flex-shrink-0"></i>
+      <span class="truncate">Lihat Tiket Saya</span>
+    </a>
+  </div>
+</section>

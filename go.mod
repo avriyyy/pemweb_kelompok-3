@@ -1,4 +1,4 @@
-module go-fiber
+module toktik
 
 go 1.26.4
 

@@ -1,0 +1,119 @@
+<div class="flex flex-col gap-5 sm:gap-6 px-5 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-4">
+    <div class="flex flex-col gap-1.5">
+      <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1.5px]">DASHBOARD</span>
+      <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Dashboard</h1>
+      <p class="text-primary/70 text-[12px] sm:text-[14px]">Selamat datang kembali, Admin! Berikut ringkasan aktivitas hari ini.</p>
+    </div>
+    <div class="flex items-center gap-1.5 sm:gap-2 bg-dark-soft border border-primary/30 rounded-xl p-1 self-start sm:self-auto">
+      <button data-range="day" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary text-dark text-[11px] sm:text-[12px] font-bold">
+        Hari Ini
+      </button>
+      <button data-range="week" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-primary text-[11px] sm:text-[12px] font-semibold">
+        Minggu Ini
+      </button>
+      <button data-range="month" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-primary text-[11px] sm:text-[12px] font-semibold">
+        Bulan Ini
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+    {{range .Stats}}
+    <div class="bg-dark border border-primary/30 rounded-2xl p-4 sm:p-5 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <span class="text-primary/60 text-[10px] sm:text-[12px] font-semibold tracking-[1px]">{{.Label}}</span>
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-[10px] bg-dark-soft flex items-center justify-center">
+          <i data-lucide="{{.Icon}}" class="w-4 h-4 sm:w-[18px] sm:h-[18px] text-primary"></i>
+        </div>
+      </div>
+      <span class="text-primary font-extrabold text-[24px] sm:text-[28px]">{{.Value}}</span>
+    </div>
+    {{end}}
+  </div>
+
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-3 sm:gap-4 items-stretch">
+    <div class="xl:col-span-2 bg-dark border border-primary/30 rounded-2xl p-5 sm:p-6 flex flex-col gap-4 sm:gap-5 h-full">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex flex-col gap-0.5">
+          <h2 class="text-primary font-bold text-[16px] sm:text-[18px]">Penjualan 7 Hari Terakhir</h2>
+          <p class="text-primary/60 text-[11px] sm:text-[12px]">Statistik penjualan tiket bioskop</p>
+        </div>
+        <div class="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-[11px]">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-sm bg-primary"></span>
+            <span class="text-primary/70">Tiket Terjual</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-end gap-2 sm:gap-3 lg:gap-4 h-[180px] sm:h-[220px]">
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">72</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 60%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">SEN</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">96</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 80%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">SEL</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">54</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 45%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">RAB</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">120</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 100%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">KAM</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">90</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 75%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">JUM</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">108</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 90%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">SAB</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">84</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: 70%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">MIN</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-dark border border-primary/30 rounded-2xl p-5 sm:p-6 flex flex-col gap-3 sm:gap-4 h-full">
+      <h2 class="text-primary font-bold text-[14px] sm:text-[16px]">Top Film</h2>
+      <div class="flex flex-col gap-2 sm:gap-2.5 flex-1 justify-center">
+        {{range .TopFilms}}
+        <div class="bg-dark-soft rounded-[10px] py-2.5 px-3 sm:py-3 sm:px-4 flex items-center justify-between">
+          <span class="text-primary font-semibold text-[12px] sm:text-[13px] truncate flex-1 min-w-0">{{.Judul}}</span>
+          <div class="flex items-center gap-1.5 sm:gap-2 bg-primary rounded-[10px] py-1 px-2 sm:py-1.5 sm:px-2.5 flex-shrink-0">
+            <span class="text-dark font-extrabold text-[12px] sm:text-[13px] leading-none">{{.TotalTiket}}</span>
+            <i data-lucide="ticket" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-dark"></i>
+          </div>
+        </div>
+        {{end}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const btns = document.querySelectorAll('.range-btn');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => {
+        b.classList.remove('bg-primary', 'text-dark');
+        b.classList.add('text-primary', 'font-semibold');
+      });
+      btn.classList.add('bg-primary', 'text-dark');
+      btn.classList.remove('text-primary', 'font-semibold');
+    });
+  });
+})();
+</script>

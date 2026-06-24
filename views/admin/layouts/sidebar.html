@@ -1,0 +1,120 @@
+{{define "admin/sidebar"}}
+{{$active := .Active}}
+<aside class="hidden lg:flex w-[240px] h-full bg-dark flex-col gap-2 py-7 px-5 flex-shrink-0 overflow-hidden">
+  <a href="/admin" class="flex items-center gap-2.5 pb-4">
+    <span class="w-9 h-9 rounded-[10px] bg-primary text-dark font-extrabold text-[18px] flex items-center justify-center">T</span>
+    <span class="text-primary font-bold text-[18px] leading-none">TokTik</span>
+    <span class="text-primary text-[9px] font-semibold tracking-[1.5px] opacity-50">ADMIN</span>
+  </a>
+
+  <div class="px-3.5 pt-4 pb-1">
+    <span class="text-primary text-[10px] font-bold tracking-[1.5px] opacity-50">MENU UTAMA</span>
+  </div>
+
+  <a href="/admin" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "dashboard"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+    <i data-lucide="layout-dashboard" class="w-[18px] h-[18px] {{if eq $active "dashboard"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+    <span class="{{if eq $active "dashboard"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Dashboard</span>
+  </a>
+
+  <a href="/admin/film" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "film"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+    <i data-lucide="film" class="w-[18px] h-[18px] {{if eq $active "film"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+    <span class="{{if eq $active "film"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Film</span>
+  </a>
+
+  <a href="/admin/jadwal" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "jadwal"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+    <i data-lucide="calendar-clock" class="w-[18px] h-[18px] {{if eq $active "jadwal"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+    <span class="{{if eq $active "jadwal"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Jadwal Tayang</span>
+  </a>
+
+  <a href="/admin/studio" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "studio"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+    <i data-lucide="building" class="w-[18px] h-[18px] {{if eq $active "studio"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+    <span class="{{if eq $active "studio"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Studio</span>
+  </a>
+
+  <a href="/admin/transaksi" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "transaksi"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+    <i data-lucide="receipt" class="w-[18px] h-[18px] {{if eq $active "transaksi"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+    <span class="{{if eq $active "transaksi"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Transaksi</span>
+  </a>
+
+  <a href="/admin/user" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "user"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+    <i data-lucide="users" class="w-[18px] h-[18px] {{if eq $active "user"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+    <span class="{{if eq $active "user"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">User</span>
+  </a>
+
+  <div class="flex-1"></div>
+
+  <a href="/logout" class="flex items-center gap-3 h-11 px-3.5 rounded-[10px] border border-primary/40 hover:bg-white/5 transition-colors">
+    <i data-lucide="log-out" class="w-[18px] h-[18px] text-primary"></i>
+    <span class="text-primary text-[13px] font-semibold">Logout</span>
+  </a>
+</aside>
+
+<div id="admin-mobile-sidebar" class="fixed inset-0 z-50 lg:hidden" style="background: rgba(0,0,0,0.6); display: none;">
+  <aside class="absolute top-0 left-0 w-[260px] sm:w-[280px] h-full bg-dark flex flex-col gap-2 py-7 px-5" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between pb-4 border-b border-primary/20">
+      <a href="/admin" class="flex items-center gap-2.5">
+        <span class="w-9 h-9 rounded-[10px] bg-primary text-dark font-extrabold text-[18px] flex items-center justify-center">T</span>
+        <span class="text-primary font-bold text-[18px] leading-none">TokTik</span>
+        <span class="text-primary text-[9px] font-semibold tracking-[1.5px] opacity-50">ADMIN</span>
+      </a>
+      <button onclick="toggleAdminSidebar()" class="w-8 h-8 rounded-lg flex items-center justify-center text-primary hover:bg-white/5">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div class="px-3.5 pt-4 pb-1">
+      <span class="text-primary text-[10px] font-bold tracking-[1.5px] opacity-50">MENU UTAMA</span>
+    </div>
+
+    <a href="/admin" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "dashboard"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+      <i data-lucide="layout-dashboard" class="w-[18px] h-[18px] {{if eq $active "dashboard"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+      <span class="{{if eq $active "dashboard"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Dashboard</span>
+    </a>
+    <a href="/admin/film" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "film"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+      <i data-lucide="film" class="w-[18px] h-[18px] {{if eq $active "film"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+      <span class="{{if eq $active "film"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Film</span>
+    </a>
+    <a href="/admin/jadwal" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "jadwal"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+      <i data-lucide="calendar-clock" class="w-[18px] h-[18px] {{if eq $active "jadwal"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+      <span class="{{if eq $active "jadwal"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Jadwal Tayang</span>
+    </a>
+    <a href="/admin/studio" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "studio"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+      <i data-lucide="building" class="w-[18px] h-[18px] {{if eq $active "studio"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+      <span class="{{if eq $active "studio"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Studio</span>
+    </a>
+    <a href="/admin/transaksi" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "transaksi"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+      <i data-lucide="receipt" class="w-[18px] h-[18px] {{if eq $active "transaksi"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+      <span class="{{if eq $active "transaksi"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">Transaksi</span>
+    </a>
+    <a href="/admin/user" class="flex items-center gap-3 h-10 px-3.5 rounded-[10px] {{if eq $active "user"}}bg-primary{{else}}hover:bg-white/5{{end}} transition-colors">
+      <i data-lucide="users" class="w-[18px] h-[18px] {{if eq $active "user"}}text-dark{{else}}text-primary opacity-70{{end}}"></i>
+      <span class="{{if eq $active "user"}}text-dark text-[13px] font-bold{{else}}text-primary text-[13px] font-medium opacity-70{{end}}">User</span>
+    </a>
+
+    <div class="flex-1"></div>
+
+    <a href="/logout" class="flex items-center gap-3 h-11 px-3.5 rounded-[10px] border border-primary/40 hover:bg-white/5 transition-colors">
+      <i data-lucide="log-out" class="w-[18px] h-[18px] text-primary"></i>
+      <span class="text-primary text-[13px] font-semibold">Logout</span>
+    </a>
+  </aside>
+</div>
+
+<script>
+function toggleAdminSidebar() {
+  const m = document.getElementById('admin-mobile-sidebar');
+  if (m.style.display === 'block') {
+    m.style.display = 'none';
+    document.body.style.overflow = '';
+  } else {
+    m.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    if (window.lucide) window.lucide.createIcons();
+  }
+}
+
+document.getElementById('admin-mobile-sidebar').addEventListener('click', e => {
+  if (e.target.id === 'admin-mobile-sidebar') toggleAdminSidebar();
+});
+</script>
+{{end}}

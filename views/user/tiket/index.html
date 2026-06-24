@@ -1,0 +1,181 @@
+<header class="bg-dark px-5 sm:px-10 lg:px-16 py-8 sm:py-10 lg:py-14">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 sm:gap-6">
+    <div class="flex flex-col gap-1.5 sm:gap-2 lg:flex-shrink-0">
+      <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Pesan Tiket</h1>
+      <p class="text-primary text-[14px] sm:text-[15px] opacity-70">Pilih film, jadwal, dan teater favorit Anda.</p>
+    </div>
+
+    <div class="flex items-center gap-2 sm:gap-2.5 overflow-x-auto pb-1 -mx-5 px-5 sm:mx-0 sm:px-0 justify-start lg:justify-end scroll-smooth snap-x snap-mandatory">
+      {{range .Dates}}
+      <button data-date="{{.ISO}}" data-today="{{.IsToday}}" class="date-btn snap-start {{if .IsToday}}bg-primary{{else}}bg-dark-soft border border-primary/30{{end}} rounded-xl py-2.5 sm:py-3 px-2.5 sm:px-3 w-[80px] sm:w-[90px] h-[72px] sm:h-[84px] flex flex-col items-center justify-center gap-1 flex-shrink-0">
+        <span class="{{if .IsToday}}text-dark{{else}}text-primary opacity-70{{end}} text-[11px] font-semibold date-label">{{.Label}}</span>
+        <span class="{{if .IsToday}}text-dark{{else}}text-primary{{end}} text-[18px] sm:text-[20px] font-extrabold date-day">{{.Day}}</span>
+        <span class="{{if .IsToday}}text-dark opacity-70{{else}}text-primary opacity-50{{end}} text-[10px] font-semibold date-month">{{.Month}}</span>
+      </button>
+      {{end}}
+    </div>
+  </div>
+</header>
+
+<section class="bg-dark px-5 sm:px-10 lg:px-16 py-5 sm:py-6 lg:py-8 flex flex-col gap-5 sm:gap-6 lg:gap-8 min-h-[calc(100vh-76px)]">
+  <div class="flex items-center gap-2 sm:gap-3">
+    <div class="flex items-center gap-2.5 sm:gap-3 flex-1 min-w-0 h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg">
+      <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-60 flex-shrink-0"></i>
+      <input type="text" id="search-input" placeholder="Cari film, teater, atau jadwal tayang..." class="flex-1 min-w-0 bg-transparent text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none" />
+    </div>
+    <button class="flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] font-semibold flex-shrink-0">
+      <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+      <span>Filter</span>
+    </button>
+  </div>
+
+  <div id="jadwals-list" class="flex flex-col gap-3 sm:gap-4 lg:gap-5">
+    {{range .Jadwals}}
+    <article data-jadwal-tanggal="{{.TanggalISO}}" class="jadwal-card bg-dark border border-primary/30 rounded-[14px] sm:rounded-[18px] p-3 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+      <div class="relative {{.FilmBg}} rounded-lg sm:rounded-xl h-[180px] sm:h-[200px] w-full sm:w-[140px] flex-shrink-0 overflow-hidden">
+        <img src="{{.Poster}}" alt="{{.Film}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />
+      </div>
+      <div class="flex-1 w-full flex flex-col gap-3 sm:gap-3.5 min-w-0">
+        <div class="flex flex-col gap-0.5 sm:gap-1">
+          <h2 class="text-primary font-extrabold text-[16px] sm:text-[20px]">{{.Film}}</h2>
+        </div>
+        <div class="flex flex-col gap-1.5 sm:gap-2">
+          <span class="text-primary text-[11px] sm:text-[12px] font-semibold">Jadwal Tersedia</span>
+          <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+            {{$fid := .FilmID}}
+            {{range .Jams}}
+            <a href="/tiket/beli/{{$fid}}" class="bg-primary rounded-[8px] sm:rounded-[10px] py-1.5 sm:py-2 px-3 sm:px-3.5 text-dark text-[12px] sm:text-[13px] font-semibold border border-primary">
+              {{.}}
+            </a>
+            {{end}}
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 bg-dark-soft border border-primary/30 text-primary text-[10px] sm:text-[11px] font-semibold rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1">
+            <i data-lucide="calendar" class="w-2.5 h-2.5 sm:w-3 sm:h-3"></i>
+            <span>{{.Tanggal}}</span>
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-primary/20 text-primary text-[10px] sm:text-[11px] font-semibold rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1">
+            <i data-lucide="circle-check" class="w-2.5 h-2.5 sm:w-3 sm:h-3"></i>
+            <span>{{.Status}}</span>
+          </span>
+        </div>
+      </div>
+      <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-[160px] gap-2 sm:gap-1.5 pt-3 sm:pt-0 border-t sm:border-t-0 border-primary/20">
+        <span class="text-primary text-[11px] opacity-60 sm:order-1">Harga</span>
+        <div class="flex items-baseline gap-1 sm:order-2">
+          <span class="text-primary text-[11px] sm:text-[12px] font-bold">Rp</span>
+          <span class="text-primary text-[18px] sm:text-[22px] font-extrabold">{{.HargaNum}}</span>
+        </div>
+        <a href="/tiket/beli/{{.FilmID}}" class="bg-primary rounded-[10px] h-10 w-full sm:w-full flex items-center justify-center gap-1.5 text-dark text-[13px] font-bold sm:order-3">
+          <span>Beli Tiket</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </article>
+    {{end}}
+  </div>
+
+  <div id="empty-state" class="hidden flex-col items-center justify-center gap-2 py-12 sm:py-16 bg-dark-soft border-2 border-primary/40 rounded-2xl">
+    <i data-lucide="calendar-clock" class="w-10 h-10 sm:w-12 sm:h-12 text-primary/40"></i>
+    <p class="text-primary text-[13px] sm:text-[14px] font-semibold">Tidak ada jadwal tayang untuk tanggal ini</p>
+    <p class="text-primary/60 text-[11px] sm:text-[12px]">Pilih tanggal lain untuk melihat film yang tersedia.</p>
+  </div>
+</section>
+
+<script>
+(function() {
+  const dateBtns = document.querySelectorAll('.date-btn');
+  const cards = document.querySelectorAll('.jadwal-card');
+  const emptyState = document.getElementById('empty-state');
+  const searchInput = document.getElementById('search-input');
+
+  function resetBtn(btn) {
+    const isToday = btn.dataset.today === 'true';
+    if (isToday) {
+      btn.className = 'date-btn snap-start bg-primary rounded-xl py-2.5 sm:py-3 px-2.5 sm:px-3 w-[80px] sm:w-[90px] h-[72px] sm:h-[84px] flex flex-col items-center justify-center gap-1 flex-shrink-0';
+    } else {
+      btn.className = 'date-btn snap-start bg-dark-soft border border-primary/30 rounded-xl py-2.5 sm:py-3 px-2.5 sm:px-3 w-[80px] sm:w-[90px] h-[72px] sm:h-[84px] flex flex-col items-center justify-center gap-1 flex-shrink-0';
+    }
+    const label = btn.querySelector('.date-label');
+    const day = btn.querySelector('.date-day');
+    const month = btn.querySelector('.date-month');
+    if (isToday) {
+      label.className = 'text-dark text-[11px] font-semibold date-label';
+      day.className = 'text-dark text-[18px] sm:text-[20px] font-extrabold date-day';
+      month.className = 'text-dark opacity-70 text-[10px] font-semibold date-month';
+    } else {
+      label.className = 'text-primary opacity-70 text-[11px] font-semibold date-label';
+      day.className = 'text-primary text-[18px] sm:text-[20px] font-extrabold date-day';
+      month.className = 'text-primary opacity-50 text-[10px] font-semibold date-month';
+    }
+  }
+
+  function applySelectedStyle(btn) {
+    const isToday = btn.dataset.today === 'true';
+    if (isToday) {
+      btn.className = 'date-btn snap-start bg-primary rounded-xl py-2.5 sm:py-3 px-2.5 sm:px-3 w-[80px] sm:w-[90px] h-[72px] sm:h-[84px] flex flex-col items-center justify-center gap-1 flex-shrink-0';
+    } else {
+      btn.className = 'date-btn snap-start bg-dark-elevated border-2 border-primary rounded-xl py-2.5 sm:py-3 px-2.5 sm:px-3 w-[80px] sm:w-[90px] h-[72px] sm:h-[84px] flex flex-col items-center justify-center gap-1 flex-shrink-0';
+    }
+    const label = btn.querySelector('.date-label');
+    const day = btn.querySelector('.date-day');
+    const month = btn.querySelector('.date-month');
+    if (isToday) {
+      label.className = 'text-dark text-[11px] font-semibold date-label';
+      day.className = 'text-dark text-[18px] sm:text-[20px] font-extrabold date-day';
+      month.className = 'text-dark opacity-70 text-[10px] font-semibold date-month';
+    } else {
+      label.className = 'text-primary text-[11px] font-semibold date-label';
+      day.className = 'text-primary text-[18px] sm:text-[20px] font-extrabold date-day';
+      month.className = 'text-primary opacity-70 text-[10px] font-semibold date-month';
+    }
+  }
+
+  function applyFilter() {
+    const selected = document.querySelector('.date-btn[data-selected="true"]');
+    if (!selected) return;
+    const selectedDate = selected.dataset.date;
+    const q = (searchInput && searchInput.value || '').toLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const matchDate = card.dataset.jadwalTanggal === selectedDate;
+      const text = card.textContent.toLowerCase();
+      const matchSearch = !q || text.indexOf(q) !== -1;
+      const show = matchDate && matchSearch;
+      card.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    if (emptyState) {
+      emptyState.classList.toggle('hidden', visible > 0);
+      emptyState.classList.toggle('flex', visible === 0);
+    }
+  }
+
+  function selectBtn(btn) {
+    dateBtns.forEach(b => {
+      b.removeAttribute('data-selected');
+      resetBtn(b);
+    });
+    btn.setAttribute('data-selected', 'true');
+    applySelectedStyle(btn);
+  }
+
+  dateBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectBtn(btn);
+      applyFilter();
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilter);
+  }
+
+  const todayBtn = document.querySelector('.date-btn[data-today="true"]');
+  if (todayBtn) {
+    selectBtn(todayBtn);
+  }
+  applyFilter();
+})();
+</script>

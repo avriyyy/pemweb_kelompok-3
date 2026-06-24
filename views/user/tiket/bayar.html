@@ -1,0 +1,90 @@
+<div class="flex flex-col lg:flex-row">
+  <main class="flex-1 flex flex-col min-w-0">
+    <div class="bg-dark px-5 sm:px-10 lg:px-16 py-6 sm:py-8 lg:py-10 flex flex-col gap-3 sm:gap-4">
+      <h1 class="text-primary font-extrabold text-[22px] sm:text-[26px] lg:text-[28px]">Pembayaran</h1>
+    </div>
+
+    <section class="bg-dark px-5 sm:px-10 lg:px-16 py-4 sm:py-6 flex flex-col gap-4 sm:gap-5">
+      <div class="flex flex-col gap-1">
+        <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">INFORMASI PEMBELI</span>
+        <h2 class="text-primary font-extrabold text-[18px] sm:text-[20px] lg:text-[22px]">Data Diri Anda</h2>
+      </div>
+      <form method="POST" action="/tiket/bayar/{{.ID}}" id="pay-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+        <div class="flex flex-col gap-2 sm:col-span-2">
+          <label class="text-primary text-[12px] sm:text-[13px] font-semibold">Nama Lengkap</label>
+          <input name="nama" type="text" required placeholder="Nama Anda" value="{{.Nama}}"
+            class="h-[48px] sm:h-[52px] px-4 bg-dark border border-primary/30 rounded-xl text-primary text-[13px] sm:text-[14px] placeholder:text-primary/40 focus:outline-none focus:border-primary" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-primary text-[12px] sm:text-[13px] font-semibold">Email</label>
+          <input name="email" type="email" required placeholder="nama@email.com" value="{{.Email}}"
+            class="h-[48px] sm:h-[52px] px-4 bg-dark border border-primary/30 rounded-xl text-primary text-[13px] sm:text-[14px] placeholder:text-primary/40 focus:outline-none focus:border-primary" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-primary text-[12px] sm:text-[13px] font-semibold">No. Telepon</label>
+          <input name="phone" type="tel" required placeholder="08xxxxxxxxxx"
+            class="h-[48px] sm:h-[52px] px-4 bg-dark border border-primary/30 rounded-xl text-primary text-[13px] sm:text-[14px] placeholder:text-primary/40 focus:outline-none focus:border-primary" />
+        </div>
+    </section>
+
+    <section class="bg-dark px-5 sm:px-10 lg:px-16 py-4 sm:py-6 pb-8 sm:pb-10 flex flex-col gap-4 sm:gap-5">
+      <div class="flex flex-col gap-1">
+        <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">METODE PEMBAYARAN</span>
+        <h2 class="text-primary font-extrabold text-[18px] sm:text-[20px] lg:text-[22px]">Pilih Cara Bayar</h2>
+      </div>
+      <div class="flex flex-col gap-2 sm:gap-2.5">
+        {{range .Payments}}
+        <label class="flex items-center gap-3 p-3 sm:p-4 {{if .Active}}bg-primary border-2 border-primary{{else}}bg-dark border border-primary/30{{end}} rounded-xl cursor-pointer hover:border-primary transition">
+          <input type="radio" name="payment" value="{{.Kode}}" {{if .Active}}checked{{end}} class="hidden" />
+          <div class="w-10 h-10 sm:w-12 sm:h-12 {{if .Active}}bg-dark{{else}}bg-primary{{end}} rounded-lg flex items-center justify-center flex-shrink-0">
+            <i data-lucide="{{.Icon}}" class="w-4 h-4 sm:w-5 sm:h-5 {{if .Active}}text-primary{{else}}text-dark{{end}}"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="{{if .Active}}text-dark{{else}}text-primary{{end}} font-bold text-[13px] sm:text-[14px]">{{.Nama}}</p>
+            <p class="{{if .Active}}text-dark/70{{else}}text-primary/60{{end}} text-[11px] sm:text-[12px] truncate">{{.Keterangan}}</p>
+          </div>
+          <i data-lucide="circle" class="w-4 h-4 sm:w-5 sm:h-5 {{if .Active}}text-dark{{else}}text-primary opacity-30{{end}} {{if .Active}}fill-current{{end}} flex-shrink-0"></i>
+        </label>
+        {{end}}
+      </div>
+      </form>
+    </section>
+  </main>
+
+  <aside class="w-full lg:w-[398px] lg:h-[calc(100vh-76px)] bg-dark p-5 sm:p-7 lg:p-10 flex flex-col gap-3 sm:gap-4 flex-shrink-0 border-t lg:border-t-0 lg:border-l border-primary/20 lg:sticky lg:top-[76px] lg:overflow-hidden">
+    <div class="bg-dark-soft border border-primary/40 rounded-2xl p-5 sm:p-6 flex flex-col gap-3 sm:gap-4 shadow-lg shadow-black/30">
+      <span class="text-primary text-[12px] sm:text-[13px] font-bold tracking-[1.5px]">KURSI YANG DIPILIH</span>
+      <div class="flex flex-col gap-1">
+        <span class="text-primary font-extrabold text-[13px] sm:text-[14px] truncate">{{.Judul}}</span>
+        <span class="text-primary text-[11px] sm:text-[12px] opacity-60">{{.Genre}}</span>
+        <span class="text-primary text-[10px] sm:text-[11px] opacity-50">{{.Tanggal}}</span>
+        <span class="text-primary text-[10px] sm:text-[11px] opacity-50">{{.Jam}}</span>
+        <span class="text-primary text-[10px] sm:text-[11px] opacity-50">{{.Studio}}</span>
+      </div>
+      <div class="flex flex-wrap gap-1.5 sm:gap-2">
+        {{range .Seats}}<span class="bg-primary text-dark text-[10px] sm:text-[11px] font-bold rounded px-2 sm:px-2.5 py-0.5 sm:py-1">{{.}}</span>{{end}}
+      </div>
+      <div class="flex items-center justify-between pt-1.5 sm:pt-2">
+        <span class="text-primary text-[11px] sm:text-[12px] opacity-60">Total</span>
+        <span class="text-primary text-[14px] sm:text-[16px] font-extrabold">Rp {{.Subtotal}}</span>
+      </div>
+    </div>
+
+    <div class="bg-primary border border-primary/40 rounded-2xl p-5 sm:p-6 flex flex-col gap-2.5 sm:gap-3 shadow-lg shadow-black/40">
+      <span class="text-dark text-[12px] sm:text-[13px] font-bold tracking-[1.5px] opacity-70">RINGKASAN PESANAN</span>
+      <div class="flex items-center justify-between">
+        <span class="text-dark text-[12px] sm:text-[13px]">{{.SeatCount}} × Kursi</span>
+        <span class="text-dark text-[12px] sm:text-[13px] font-semibold">Rp {{.Subtotal}}</span>
+      </div>
+      <div class="h-px bg-dark/20 my-0.5"></div>
+      <div class="flex items-center justify-between">
+        <span class="text-dark text-[13px] sm:text-[14px] font-bold">Total Bayar</span>
+        <span class="text-dark text-[14px] sm:text-[16px] font-extrabold">Rp {{.Total}}</span>
+      </div>
+      <button type="submit" form="pay-form" class="mt-1 w-full h-11 sm:h-12 bg-dark text-primary font-bold text-[13px] sm:text-[14px] rounded-lg sm:rounded-xl flex items-center justify-center gap-2 hover:bg-dark-elevated transition">
+        <i data-lucide="lock" class="w-4 h-4"></i>
+        <span>Bayar Sekarang</span>
+      </button>
+    </div>
+  </aside>
+</div>

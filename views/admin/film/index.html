@@ -1,0 +1,82 @@
+<div class="flex flex-col gap-5 sm:gap-6 px-5 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-0">
+    <div class="flex flex-col gap-1.5">
+      <span class="text-primary/60 text-[10px] sm:text-[11px] font-bold tracking-[1.5px]">MANAJEMEN FILM</span>
+      <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Manajemen Film</h1>
+      <p class="text-primary/70 text-[12px] sm:text-[14px]">Kelola semua film yang tayang di bioskop Anda.</p>
+    </div>
+    <a href="/admin/film/tambah" class="inline-flex items-center justify-center gap-2 bg-primary text-dark font-bold text-[13px] sm:text-[14px] rounded-xl px-4 sm:px-5 py-2.5 sm:py-3 hover:bg-primary-hover transition w-fit">
+      <i data-lucide="plus" class="w-4 h-4"></i>
+      <span>Tambah Film</span>
+    </a>
+  </div>
+
+  <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+    <div class="flex-1 min-w-[200px] flex items-center gap-2.5 sm:gap-3 h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg">
+      <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-60 flex-shrink-0"></i>
+      <input type="text" placeholder="Cari film berdasarkan judul..." class="flex-1 min-w-0 bg-transparent text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none" />
+    </div>
+    <button class="flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] font-semibold hover:bg-dark-elevated transition">
+      <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+      <span>Filter Status</span>
+    </button>
+  </div>
+
+  <div class="bg-dark border border-primary/40 rounded-2xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[720px]">
+        <thead>
+          <tr class="border-b border-primary/20">
+            <th class="text-left text-primary text-[10px] sm:text-[11px] font-bold tracking-[1px] opacity-60 px-4 sm:px-5 py-3.5">POSTER</th>
+            <th class="text-left text-primary text-[10px] sm:text-[11px] font-bold tracking-[1px] opacity-60 px-3 sm:px-4 py-3.5">JUDUL FILM</th>
+            <th class="text-left text-primary text-[10px] sm:text-[11px] font-bold tracking-[1px] opacity-60 px-3 sm:px-4 py-3.5 hidden md:table-cell">GENRE</th>
+            <th class="text-left text-primary text-[10px] sm:text-[11px] font-bold tracking-[1px] opacity-60 px-3 sm:px-4 py-3.5 hidden lg:table-cell">DURASI</th>
+            <th class="text-left text-primary text-[10px] sm:text-[11px] font-bold tracking-[1px] opacity-60 px-3 sm:px-4 py-3.5">STATUS</th>
+            <th class="text-right text-primary text-[10px] sm:text-[11px] font-bold tracking-[1px] opacity-60 px-4 sm:px-5 py-3.5">AKSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Films}}
+          <tr class="border-b border-primary/10 last:border-b-0 hover:bg-white/[0.02] transition-colors">
+            <td class="px-4 sm:px-5 py-3 sm:py-3.5">
+              <div class="relative {{.PosterBg}} w-10 h-14 sm:w-12 sm:h-16 rounded-md flex-shrink-0 overflow-hidden">
+                {{if .Poster}}<img src="{{.Poster}}" alt="{{.Judul}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />{{end}}
+              </div>
+            </td>
+            <td class="px-3 sm:px-4 py-3 sm:py-3.5">
+              <div class="flex flex-col gap-0.5 min-w-0">
+                <span class="text-primary font-bold text-[12px] sm:text-[13px] truncate max-w-[180px]">{{.Judul}}</span>
+              </div>
+            </td>
+            <td class="px-3 sm:px-4 py-3 sm:py-3.5 hidden md:table-cell">
+              <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.Genre}}</span>
+            </td>
+            <td class="px-3 sm:px-4 py-3 sm:py-3.5 hidden lg:table-cell">
+              <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.Durasi}}</span>
+            </td>
+            <td class="px-3 sm:px-4 py-3 sm:py-3.5">
+              {{if eq .Status "Aktif"}}
+              <span class="inline-block bg-primary text-dark text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">Aktif</span>
+              {{else}}
+              <span class="inline-block bg-primary/20 text-primary text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">Tidak Aktif</span>
+              {{end}}
+            </td>
+            <td class="px-4 sm:px-5 py-3 sm:py-3.5">
+              <div class="flex items-center justify-end gap-1.5 sm:gap-2">
+                <a href="/admin/film/edit/{{.ID}}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-primary text-dark flex items-center justify-center hover:bg-primary-hover transition" title="Edit">
+                  <i data-lucide="pencil" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </a>
+                <form method="POST" action="/admin/film/hapus/{{.ID}}" onsubmit="return confirm('Yakin ingin menghapus film ini?')" class="inline">
+                  <button type="submit" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-dark-soft border border-primary/30 text-primary flex items-center justify-center hover:bg-red-500/20 transition" title="Hapus">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

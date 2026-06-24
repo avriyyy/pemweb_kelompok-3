@@ -1,0 +1,88 @@
+{{define "user/navbar"}}
+<div class="fixed top-0 left-0 right-0 z-40">
+<nav class="w-full bg-dark h-[64px] lg:h-[76px] flex items-center justify-between px-4 sm:px-8 lg:px-16 border-b border-primary/20">
+  <a href="/" class="flex items-center gap-3">
+    <span class="w-9 h-9 rounded-[10px] bg-primary text-dark font-extrabold text-[18px] flex items-center justify-center">T</span>
+    <span class="text-primary font-bold text-[20px]">TokTik</span>
+  </a>
+
+  <div class="hidden md:flex items-center gap-6 lg:gap-8">
+    {{if eq .Active "home"}}
+    <a href="/" class="text-primary text-[14px] font-semibold transition-opacity">Beranda</a>
+    {{else}}
+    <a href="/" class="text-white text-[14px] font-normal opacity-70 hover:opacity-100 transition-opacity">Beranda</a>
+    {{end}}
+
+    {{if eq .Active "tiket"}}
+    <a href="/tiket" class="text-primary text-[14px] font-semibold transition-opacity">Tiket</a>
+    {{else}}
+    <a href="/tiket" class="text-white text-[14px] font-normal opacity-70 hover:opacity-100 transition-opacity">Tiket</a>
+    {{end}}
+
+    {{if eq .Active "tiket-saya"}}
+    <a href="/tiket-saya" class="text-primary text-[14px] font-semibold transition-opacity">Tiket Saya</a>
+    {{else}}
+    <a href="/tiket-saya" class="text-white text-[14px] font-normal opacity-70 hover:opacity-100 transition-opacity">Tiket Saya</a>
+    {{end}}
+  </div>
+
+  <button onclick="toggleMobileNav()" class="w-9 h-9 lg:w-10 lg:h-10 rounded-full bg-primary text-dark font-bold text-[14px] flex items-center justify-center hover:opacity-90 transition-opacity">
+    {{.Initial}}
+  </button>
+</nav>
+
+<div id="mobile-nav" class="absolute top-full right-3 sm:right-4 mt-2 z-50 hidden">
+  <div class="w-[200px] bg-dark border border-primary/40 rounded-xl shadow-lg overflow-hidden">
+    <div class="md:hidden flex flex-col py-2 border-b border-primary/20">
+      {{if eq .Active "home"}}
+      <a href="/" class="flex items-center gap-3 px-4 h-10 bg-primary text-dark font-bold text-[14px]">Beranda</a>
+      {{else}}
+      <a href="/" class="flex items-center gap-3 px-4 h-10 text-primary opacity-70 hover:opacity-100 hover:bg-white/5 font-medium text-[14px]">Beranda</a>
+      {{end}}
+
+      {{if eq .Active "tiket"}}
+      <a href="/tiket" class="flex items-center gap-3 px-4 h-10 bg-primary text-dark font-bold text-[14px]">Tiket</a>
+      {{else}}
+      <a href="/tiket" class="flex items-center gap-3 px-4 h-10 text-primary opacity-70 hover:opacity-100 hover:bg-white/5 font-medium text-[14px]">Tiket</a>
+      {{end}}
+
+      {{if eq .Active "tiket-saya"}}
+      <a href="/tiket-saya" class="flex items-center gap-3 px-4 h-10 bg-primary text-dark font-bold text-[14px]">Tiket Saya</a>
+      {{else}}
+      <a href="/tiket-saya" class="flex items-center gap-3 px-4 h-10 text-primary opacity-70 hover:opacity-100 hover:bg-white/5 font-medium text-[14px]">Tiket Saya</a>
+      {{end}}
+    </div>
+    <div class="flex flex-col py-2">
+      <a href="/profile" class="flex items-center gap-3 px-4 h-10 text-primary opacity-70 hover:opacity-100 hover:bg-white/5 font-medium text-[14px]">
+        <i data-lucide="user" class="w-4 h-4 flex-shrink-0"></i>
+        <span>Profil</span>
+      </a>
+      <a href="/logout" class="flex items-center gap-3 px-4 h-10 text-primary opacity-70 hover:opacity-100 hover:bg-white/5 font-medium text-[14px]">
+        <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
+        <span>Keluar</span>
+      </a>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function toggleMobileNav() {
+  const m = document.getElementById('mobile-nav');
+  if (m.classList.contains('hidden')) {
+    m.classList.remove('hidden');
+    if (window.lucide) window.lucide.createIcons();
+  } else {
+    m.classList.add('hidden');
+  }
+}
+
+document.addEventListener('click', e => {
+  const m = document.getElementById('mobile-nav');
+  const btn = e.target.closest('[onclick="toggleMobileNav()"]');
+  if (m && !m.classList.contains('hidden') && !btn && !m.contains(e.target)) {
+    m.classList.add('hidden');
+  }
+});
+</script>
+{{end}}

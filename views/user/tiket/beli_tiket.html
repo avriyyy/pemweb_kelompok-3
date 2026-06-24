@@ -1,0 +1,233 @@
+<div class="flex flex-col lg:flex-row">
+  <main class="flex-1 flex flex-col min-w-0">
+    <section class="bg-dark px-5 sm:px-10 lg:px-16 py-6 sm:py-8 lg:py-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 lg:gap-8">
+      <div class="relative bg-primary rounded-xl sm:rounded-2xl w-[140px] sm:w-[180px] lg:w-[200px] h-[200px] sm:h-[260px] lg:h-[280px] flex-shrink-0 overflow-hidden">
+        {{if .Film.Poster}}<img src="{{.Film.Poster}}" alt="{{.Film.Judul}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />{{end}}
+      </div>
+      <div class="flex-1 flex flex-col gap-3 sm:gap-4 min-w-0">
+        <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">PESAN TIKET</span>
+        <div class="flex flex-col gap-1 sm:gap-1.5">
+          <h1 class="text-primary font-extrabold text-[28px] sm:text-[34px] lg:text-[40px]">{{.Film.Judul}}</h1>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 pt-2 lg:pt-4">
+          <div class="min-w-0">
+            <span class="block text-primary text-[10px] sm:text-[11px] opacity-60 uppercase tracking-wider">Tanggal</span>
+            <span class="block text-primary text-[13px] sm:text-[14px] lg:text-[15px] font-bold mt-1 truncate">Senin, 23 Juni 2026</span>
+          </div>
+          <div class="min-w-0">
+            <span class="block text-primary text-[10px] sm:text-[11px] opacity-60 uppercase tracking-wider">Jam Tayang</span>
+            <span class="block text-primary text-[13px] sm:text-[14px] lg:text-[15px] font-bold mt-1" id="info-jam">{{.Jam}} WIB</span>
+          </div>
+          <div class="min-w-0 col-span-2 lg:col-span-1">
+            <span class="block text-primary text-[10px] sm:text-[11px] opacity-60 uppercase tracking-wider">Studio</span>
+            <span class="block text-primary text-[13px] sm:text-[14px] lg:text-[15px] font-bold mt-1" id="info-studio">{{.Studio}}</span>
+          </div>
+          <div class="min-w-0 col-span-2 lg:col-span-1">
+            <span class="block text-primary text-[10px] sm:text-[11px] opacity-60 uppercase tracking-wider">Tipe</span>
+            <span class="block text-primary text-[13px] sm:text-[14px] lg:text-[15px] font-bold mt-1" id="info-tipe">{{.Tipe}}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-dark px-5 sm:px-10 lg:px-16 py-6 sm:py-8 lg:py-10 flex flex-col gap-4 sm:gap-5">
+      <h2 class="text-primary font-extrabold text-[22px] sm:text-[26px] lg:text-[28px]">Pilih Jadwal Tayang</h2>
+      {{if .Times}}
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+        {{range .Times}}
+        <button class="time-btn bg-dark {{if .Active}}border-2 border-primary{{else}}border border-primary/30{{end}} rounded-lg sm:rounded-xl py-3 sm:py-4 px-2 sm:px-3 flex flex-col gap-1.5 hover:border-primary transition min-w-0 w-full" data-jam="{{.Jam}}" data-studio="{{.Studio}}" data-tipe="{{.Tipe}}" data-harga="{{.Harga}}">
+          <div class="flex items-baseline justify-between w-full gap-1">
+            <span class="text-primary text-[18px] sm:text-[22px] lg:text-[24px] font-extrabold {{if not .Active}}opacity-60{{end}}">{{.Jam}}</span>
+            <span class="text-primary text-[10px] sm:text-[11px] font-bold whitespace-nowrap">Rp {{.Harga}}</span>
+          </div>
+          <div class="flex items-center justify-between w-full gap-1">
+            <span class="text-primary text-[10px] sm:text-[11px] font-semibold truncate min-w-0">{{.Studio}}</span>
+            <span class="inline-flex items-center gap-1 bg-dark-soft border border-primary/30 text-primary text-[9px] sm:text-[10px] font-bold rounded-full px-1.5 sm:px-2 py-0.5 whitespace-nowrap flex-shrink-0">
+              <span>{{.Tipe}}</span>
+            </span>
+          </div>
+        </button>
+        {{end}}
+      </div>
+      {{else}}
+      <div class="flex flex-col items-center justify-center gap-2 py-8 sm:py-10 bg-dark-soft border border-primary/20 rounded-2xl">
+        <i data-lucide="calendar-clock" class="w-8 h-8 sm:w-10 sm:h-10 text-primary/40"></i>
+        <p class="text-primary text-[13px] sm:text-[14px] font-semibold">Tidak ada pilihan jadwal tayang yang tersedia</p>
+        <p class="text-primary/60 text-[11px] sm:text-[12px]">Silakan pilih film lain.</p>
+      </div>
+      {{end}}
+    </section>
+
+    <section class="bg-dark px-5 sm:px-10 lg:px-16 py-6 sm:py-8 lg:py-10 pb-8 flex flex-col gap-4 sm:gap-5">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+        <h2 class="text-primary font-extrabold text-[22px] sm:text-[26px] lg:text-[28px]">Pilih Kursi Anda</h2>
+        <span class="text-primary text-[12px] sm:text-[13px] opacity-60">Klik kursi yang tersedia untuk memilih</span>
+      </div>
+
+      <div class="flex flex-col items-center gap-2 sm:gap-3">
+        <div class="bg-primary opacity-30 h-1 sm:h-1.5 w-full max-w-[720px] rounded"></div>
+        <span class="text-primary text-[10px] sm:text-[11px] font-semibold tracking-[2px] opacity-50">LAYAR</span>
+      </div>
+
+      <div class="overflow-x-auto py-3 sm:py-4 -mx-5 px-5 sm:mx-0 sm:px-0">
+        <div class="flex flex-col items-center gap-2 sm:gap-3 min-w-fit">
+          {{range $key, $grid := .SeatGrids}}
+          <div data-grid="{{$key}}" class="flex flex-col items-center gap-2 sm:gap-3 {{if ne $key $.ActiveGrid}}hidden{{end}}">
+            {{range $grid}}
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <span class="text-primary text-[11px] sm:text-[13px] font-bold opacity-60 w-4 sm:w-6 text-center">{{.Row}}</span>
+              {{range .Seats}}
+              <button data-seat="{{.Code}}" class="w-7 h-7 sm:w-8 sm:h-8 rounded text-[9px] sm:text-[10px] font-bold
+                {{if eq .Status "available"}}bg-dark-soft border border-primary/30 text-primary/70 hover:bg-primary hover:text-dark{{end}}
+                {{if eq .Status "selected"}}bg-primary text-dark{{end}}
+                {{if eq .Status "taken"}}bg-dark-soft text-primary/30 cursor-not-allowed{{end}}
+                transition">{{.Code}}</button>
+              {{if .Aisle}}<div class="w-3 sm:w-5"></div>{{end}}
+              {{end}}
+              <span class="text-primary text-[11px] sm:text-[13px] font-bold opacity-60 w-4 sm:w-6 text-center">{{.Row}}</span>
+            </div>
+            {{end}}
+          </div>
+          {{end}}
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center gap-4 sm:gap-6 pt-1 sm:pt-2 flex-wrap">
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 sm:w-5 sm:h-5 rounded border border-primary"></span>
+          <span class="text-primary text-[12px] sm:text-[13px] opacity-70">Tersedia</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 sm:w-5 sm:h-5 rounded bg-primary"></span>
+          <span class="text-primary text-[12px] sm:text-[13px] opacity-70">Dipilih</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 sm:w-5 sm:h-5 rounded bg-dark-soft"></span>
+          <span class="text-primary text-[12px] sm:text-[13px] opacity-70">Tidak Tersedia</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="w-full lg:w-[398px] lg:h-[calc(100vh-76px)] bg-dark p-5 sm:p-7 lg:p-10 flex flex-col gap-3 sm:gap-4 flex-shrink-0 border-t lg:border-t-0 lg:border-l border-primary/20 lg:sticky lg:top-[76px] lg:overflow-hidden">
+    <div class="bg-dark-soft border border-primary/40 rounded-2xl p-5 sm:p-6 flex flex-col gap-3 sm:gap-4 shadow-lg shadow-black/30">
+      <span class="text-primary text-[12px] sm:text-[13px] font-bold tracking-[1.5px]">KURSI YANG DIPILIH</span>
+      <div id="selected-seats" class="flex flex-wrap gap-1.5 sm:gap-2">
+        <span class="text-primary text-[12px] sm:text-[13px] opacity-50">Belum ada kursi dipilih</span>
+      </div>
+      <div class="flex items-center justify-between pt-1.5 sm:pt-2">
+        <span class="text-primary text-[11px] sm:text-[12px] opacity-60">Total</span>
+        <span id="total-price" class="text-primary text-[14px] sm:text-[16px] font-extrabold">Rp 0</span>
+      </div>
+    </div>
+
+    <div class="bg-primary border border-primary/40 rounded-2xl p-5 sm:p-6 flex flex-col gap-2.5 sm:gap-3 shadow-lg shadow-black/40">
+      <span class="text-dark text-[12px] sm:text-[13px] font-bold tracking-[1.5px] opacity-70">RINGKASAN PESANAN</span>
+      <div class="flex items-center justify-between">
+        <span id="seat-count" class="text-dark text-[12px] sm:text-[13px]">0 × Kursi Reguler</span>
+        <span id="subtotal" class="text-dark text-[12px] sm:text-[13px] font-semibold">Rp 0</span>
+      </div>
+      <div class="h-px bg-dark/20 my-0.5"></div>
+      <div class="flex items-center justify-between">
+        <span class="text-dark text-[13px] sm:text-[14px] font-bold">Total Bayar</span>
+        <span id="grand-total" class="text-dark text-[14px] sm:text-[16px] font-extrabold">Rp 0</span>
+      </div>
+      <form method="POST" action="/tiket/beli/{{.ID}}" id="checkout-form" class="mt-1">
+        <input type="hidden" name="seats" id="seats-input" value="" />
+        <input type="hidden" name="time" id="time-input" value="18:00" />
+        <button type="submit" class="w-full h-11 sm:h-12 bg-dark text-primary font-bold text-[13px] sm:text-[14px] rounded-lg sm:rounded-xl flex items-center justify-center gap-2 hover:bg-dark-elevated transition">
+          <span>Lanjut ke Pembayaran</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+    </div>
+  </aside>
+</div>
+
+<script>
+let currentHarga = 50000;
+let currentTipe = 'Premiere';
+
+document.querySelectorAll('.time-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.time-btn').forEach(b => {
+      b.classList.remove('border-2', 'border-primary');
+      b.classList.add('border', 'border-primary/30');
+    });
+    btn.classList.remove('border', 'border-primary/30');
+    btn.classList.add('border-2', 'border-primary');
+    currentHarga = parseInt(btn.dataset.harga);
+    currentTipe = btn.dataset.tipe;
+    const studio = btn.dataset.studio;
+    const gridKey = studio + '|' + currentTipe;
+    document.querySelectorAll('[data-grid]').forEach(g => {
+      if (g.dataset.grid === gridKey) {
+        g.classList.remove('hidden');
+      } else {
+        g.classList.add('hidden');
+      }
+    });
+    document.querySelectorAll('[data-seat]').forEach(s => {
+      if (!s.classList.contains('cursor-not-allowed')) {
+        s.classList.remove('bg-primary', 'text-dark');
+        s.classList.add('bg-dark-soft', 'border', 'border-primary/30', 'text-primary/70');
+      }
+    });
+    selected = [];
+    document.getElementById('info-jam').textContent = btn.dataset.jam + ' WIB';
+    document.getElementById('info-studio').textContent = studio;
+    document.getElementById('info-tipe').textContent = currentTipe;
+    render();
+  });
+});
+
+const seatButtons = document.querySelectorAll('[data-seat]');
+const selectedSeatsEl = document.getElementById('selected-seats');
+const seatCountEl = document.getElementById('seat-count');
+const subtotalEl = document.getElementById('subtotal');
+const totalEl = document.getElementById('total-price');
+const grandEl = document.getElementById('grand-total');
+const seatsInput = document.getElementById('seats-input');
+const form = document.getElementById('checkout-form');
+let selected = [];
+
+seatButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('cursor-not-allowed')) return;
+    const code = btn.dataset.seat;
+    if (btn.classList.contains('bg-primary')) {
+      btn.classList.remove('bg-primary', 'text-dark');
+      btn.classList.add('bg-dark-soft', 'border', 'border-primary/30', 'text-primary/70');
+      selected = selected.filter(s => s !== code);
+    } else {
+      btn.classList.add('bg-primary', 'text-dark');
+      btn.classList.remove('bg-dark-soft', 'border', 'border-primary/30', 'text-primary/70');
+      selected.push(code);
+    }
+    render();
+  });
+});
+
+function render() {
+  if (selected.length === 0) {
+    selectedSeatsEl.innerHTML = '<span class="text-primary text-[12px] sm:text-[13px] opacity-50">Belum ada kursi dipilih</span>';
+  } else {
+    selectedSeatsEl.innerHTML = selected.sort().map(s =>
+      `<span class="bg-primary text-dark text-[11px] sm:text-[12px] font-bold rounded-lg px-3 sm:px-3.5 py-1.5 sm:py-2">${s}</span>`
+    ).join('');
+  }
+  const sub = selected.length * currentHarga;
+  seatCountEl.textContent = selected.length + ' × Kursi ' + currentTipe;
+  subtotalEl.textContent = 'Rp ' + sub.toLocaleString('id-ID');
+  totalEl.textContent = 'Rp ' + sub.toLocaleString('id-ID');
+  grandEl.textContent = 'Rp ' + sub.toLocaleString('id-ID');
+  seatsInput.value = selected.join(',');
+}
+
+form.addEventListener('submit', e => {
+  if (selected.length === 0) {
+    e.preventDefault();
+    alert('Pilih minimal 1 kursi terlebih dahulu');
+  }
+});
+</script>
