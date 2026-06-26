@@ -27,8 +27,12 @@ func main() {
 
 	database.DB.AutoMigrate(
 		&models.Film{},
+		&models.Studio{},
+		&models.Schedule{},
+		&models.User{},
+		&models.Transaksi{},
+		&models.Tiket{},
 	)
-
 	routes.Web(app)
 
 	log.Println("TokTik running on http://localhost:3000")

@@ -13,9 +13,9 @@ type Transaksi struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 
-	User   *User   `gorm:"foreignKey:UserID" json:"user,omitempty"`
-	Jadwal *Jadwal `gorm:"foreignKey:JadwalID" json:"jadwal,omitempty"`
-	Tiket  []Tiket `gorm:"foreignKey:TransaksiID" json:"tiket,omitempty"`
+	User     *User     `gorm:"foreignKey:UserID" json:"user,omitempty"`
+	Schedule *Schedule `gorm:"foreignKey:JadwalID" json:"jadwal,omitempty"`
+	Tiket    []Tiket   `gorm:"foreignKey:TransaksiID" json:"tiket,omitempty"`
 }
 
 func (Transaksi) TableName() string { return "transaksis" }

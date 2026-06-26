@@ -30,7 +30,7 @@
         <select name="studio_id" required class="flex-1 bg-transparent text-primary text-[12px] sm:text-[13px] focus:outline-none appearance-none">
           <option value="" class="bg-dark">Pilih studio</option>
           {{range .Studios}}
-          <option value="{{.ID}}" class="bg-dark">{{.Nama}} — {{.Tipe}} ({{.Baris}}×{{.KursiPerBaris}})</option>
+          <option value="{{.ID}}" class="bg-dark">{{.NamaStudio}} ({{.JumlahBaris}} × {{.JumlahKolom}})</option>
           {{end}}
         </select>
         <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-primary opacity-70 flex-shrink-0"></i>

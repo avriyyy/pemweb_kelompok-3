@@ -95,25 +95,6 @@ func (AdminController) Dashboard(c *fiber.Ctx) error {
 	}, "layouts/admin")
 }
 
-//	func (AdminController) FilmIndex(c *fiber.Ctx) error {
-//		films := make([]fiber.Map, 0, len(data.Films))
-//		for _, f := range data.Films {
-//			films = append(films, fiber.Map{
-//				"ID":          f.ID,
-//				"Judul":       f.Judul,
-//				"Genre":       f.Genre,
-//				"Durasi":      f.Durasi,
-//				"Rating":      f.Rating,
-//				"Status":      f.Status,
-//				"PosterColor": f.PosterColor,
-//				"Poster":      f.Poster,
-//				"Tanggal":     f.Tanggal,
-//			})
-//		}
-//		return c.Render("admin/film/index", fiber.Map{
-//			"Title": "Manajemen Film", "Active": "film", "Films": films,
-//		}, "layouts/admin")
-//	}
 func (AdminController) FilmIndex(c *fiber.Ctx) error {
 
 	var films []models.Film
@@ -133,13 +114,6 @@ func (AdminController) FilmTambah(c *fiber.Ctx) error {
 	}, "layouts/admin")
 }
 
-//	func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
-//		posterURL := strings.TrimSpace(c.FormValue("poster_url"))
-//		if posterURL == "" {
-//			posterURL = "https://picsum.photos/seed/" + strings.ToLower(strings.ReplaceAll(c.FormValue("judul"), " ", "-")) + "/400/600"
-//		}
-//		return c.Redirect("/admin/film?poster=" + posterURL)
-//	}
 func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
 
 	durasi, _ := strconv.Atoi(c.FormValue("durasi"))
@@ -169,33 +143,6 @@ func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
 	return c.Redirect("/admin/film")
 }
 
-//	func (AdminController) FilmEdit(c *fiber.Ctx) error {
-//		id := data.ParseID(c.Params("id"))
-//		var film *data.Film
-//		for i, f := range data.Films {
-//			if f.ID == strconv.FormatUint(uint64(id), 10) {
-//				film = &data.Films[i]
-//				break
-//			}
-//		}
-//		if film == nil {
-//			return c.Redirect("/admin/film")
-//		}
-//		return c.Render("admin/film/edit", fiber.Map{
-//			"Title": "Edit Film", "Active": "film", "Film": fiber.Map{
-//				"ID":          film.ID,
-//				"Judul":       film.Judul,
-//				"Genre":       film.Genre,
-//				"Durasi":      film.Durasi,
-//				"Rating":      film.Rating,
-//				"Synopsis":    film.Synopsis,
-//				"Status":      film.Status,
-//				"PosterColor": film.PosterColor,
-//				"Poster":      film.Poster,
-//				"Tanggal":     film.Tanggal,
-//			},
-//		}, "layouts/admin")
-//	}
 func (AdminController) FilmEdit(c *fiber.Ctx) error {
 
 	id := c.Params("id")
@@ -213,9 +160,6 @@ func (AdminController) FilmEdit(c *fiber.Ctx) error {
 	}, "layouts/admin")
 }
 
-//	func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
-//		return c.Redirect("/admin/film")
-//	}
 func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
 
 	id := c.Params("id")
@@ -249,9 +193,6 @@ func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
 	return c.Redirect("/admin/film")
 }
 
-//	func (AdminController) FilmHapus(c *fiber.Ctx) error {
-//		return c.Redirect("/admin/film")
-//	}
 func (AdminController) FilmHapus(c *fiber.Ctx) error {
 
 	id := c.Params("id")
@@ -261,50 +202,52 @@ func (AdminController) FilmHapus(c *fiber.Ctx) error {
 	return c.Redirect("/admin/film")
 }
 
+// func (AdminController) JadwalIndex(c *fiber.Ctx) error {
+
+// 	var jadwals []models.Schedule
+
+// 	database.DB.
+// 		Preload("Film").
+// 		Preload("Studio").
+// 		Find(&jadwals)
+
+//		return c.Render("admin/jadwal/index", fiber.Map{
+//			"Title":   "Jadwal Tayang",
+//			"Active":  "jadwal",
+//			"Jadwals": jadwals,
+//		}, "layouts/admin")
+//	}
 func (AdminController) JadwalIndex(c *fiber.Ctx) error {
-	jadwals := make([]fiber.Map, 0, len(data.Jadwals))
-	for _, j := range data.Jadwals {
-		jadwals = append(jadwals, fiber.Map{
-			"ID":         j.ID,
-			"FilmID":     j.FilmID,
-			"StudioID":   j.StudioID,
-			"Film":       j.Film,
-			"Studio":     j.Studio,
-			"Tanggal":    j.Tanggal,
-			"Jam":        j.Jam,
-			"Harga":      j.Harga,
-			"HargaNum":   j.HargaNum,
-			"Tiket":      j.Tiket,
-			"Status":     j.Status,
-			"FilmBg":     j.FilmBg,
-			"StudioBg":   j.StudioBg,
-			"TanggalISO": j.TanggalISO,
-		})
+
+	var jadwals []models.Schedule
+
+	database.DB.
+		Preload("Film").
+		Preload("Studio").
+		Find(&jadwals)
+
+	for _, j := range jadwals {
+		println(
+			"Film =", j.Film.Judul,
+			"Studio =", j.Studio.NamaStudio,
+		)
 	}
+
 	return c.Render("admin/jadwal/index", fiber.Map{
-		"Title": "Jadwal Tayang", "Active": "jadwal", "Jadwals": jadwals,
+		"Title":   "Jadwal Tayang",
+		"Active":  "jadwal",
+		"Jadwals": jadwals,
 	}, "layouts/admin")
 }
 
 func (AdminController) JadwalTambah(c *fiber.Ctx) error {
-	films := make([]fiber.Map, 0, len(data.Films))
-	for _, f := range data.Films {
-		films = append(films, fiber.Map{
-			"ID":    f.ID,
-			"Judul": f.Judul,
-			"Genre": f.Genre,
-		})
-	}
-	studios := make([]fiber.Map, 0, len(data.Studios))
-	for _, s := range data.Studios {
-		studios = append(studios, fiber.Map{
-			"ID":            s.ID,
-			"Nama":          s.Nama,
-			"Tipe":          s.Tipe,
-			"Baris":         s.Baris,
-			"KursiPerBaris": s.KursiPerBaris,
-		})
-	}
+
+	var films []models.Film
+	var studios []models.Studio
+
+	database.DB.Find(&films)
+	database.DB.Find(&studios)
+
 	return c.Render("admin/jadwal/tambah", fiber.Map{
 		"Title":   "Tambah Jadwal",
 		"Active":  "jadwal",
@@ -314,48 +257,102 @@ func (AdminController) JadwalTambah(c *fiber.Ctx) error {
 }
 
 func (AdminController) JadwalTambahSubmit(c *fiber.Ctx) error {
+
+	filmID, _ := strconv.Atoi(c.FormValue("film_id"))
+	studioID, _ := strconv.Atoi(c.FormValue("studio_id"))
+
+	harga, _ := strconv.ParseFloat(c.FormValue("harga"), 64)
+
+	tanggal, _ := time.Parse(
+		"2006-01-02",
+		c.FormValue("tanggal"),
+	)
+
+	jadwal := models.Schedule{
+		FilmID:        uint(filmID),
+		StudioID:      uint(studioID),
+		TanggalTayang: tanggal,
+		JamTayang:     c.FormValue("jam"),
+		Harga:         harga,
+		Status:        c.FormValue("status"),
+	}
+
+	if err := database.DB.Create(&jadwal).Error; err != nil {
+		return c.SendString(err.Error())
+	}
+
 	return c.Redirect("/admin/jadwal")
 }
 
 func (AdminController) JadwalEdit(c *fiber.Ctx) error {
-	id := data.ParseID(c.Params("id"))
-	jadwal := data.FindJadwalByID(id)
-	if jadwal == nil {
+
+	id := c.Params("id")
+
+	var jadwal models.Schedule
+
+	if err := database.DB.
+		Preload("Film").
+		Preload("Studio").
+		First(&jadwal, id).Error; err != nil {
+
 		return c.Redirect("/admin/jadwal")
 	}
-	films := make([]fiber.Map, 0, len(data.Films))
-	for _, f := range data.Films {
-		films = append(films, fiber.Map{
-			"ID":    f.ID,
-			"Judul": f.Judul,
-			"Genre": f.Genre,
-		})
-	}
-	studios := make([]fiber.Map, 0, len(data.Studios))
-	for _, s := range data.Studios {
-		studios = append(studios, fiber.Map{
-			"ID":            s.ID,
-			"Nama":          s.Nama,
-			"Tipe":          s.Tipe,
-			"Baris":         s.Baris,
-			"KursiPerBaris": s.KursiPerBaris,
-		})
-	}
+
+	tanggalISO := jadwal.TanggalTayang.Format("2006-01-02")
+
+	var films []models.Film
+	var studios []models.Studio
+
+	database.DB.Find(&films)
+	database.DB.Find(&studios)
+
 	return c.Render("admin/jadwal/edit", fiber.Map{
-		"Title":   "Edit Jadwal",
-		"Active":  "jadwal",
-		"ID":      c.Params("id"),
-		"Jadwal":  jadwal,
-		"Films":   films,
-		"Studios": studios,
+		"Title":      "Edit Jadwal",
+		"Active":     "jadwal",
+		"Jadwal":     jadwal,
+		"Films":      films,
+		"Studios":    studios,
+		"TanggalISO": tanggalISO,
 	}, "layouts/admin")
 }
 
 func (AdminController) JadwalEditSubmit(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	var jadwal models.Schedule
+
+	if err := database.DB.First(&jadwal, id).Error; err != nil {
+		return c.Redirect("/admin/jadwal")
+	}
+
+	filmID, _ := strconv.Atoi(c.FormValue("film_id"))
+	studioID, _ := strconv.Atoi(c.FormValue("studio_id"))
+	harga, _ := strconv.ParseFloat(c.FormValue("harga"), 64)
+
+	tanggal, _ := time.Parse(
+		"2006-01-02",
+		c.FormValue("tanggal"),
+	)
+
+	jadwal.FilmID = uint(filmID)
+	jadwal.StudioID = uint(studioID)
+	jadwal.TanggalTayang = tanggal
+	jadwal.JamTayang = c.FormValue("jam")
+	jadwal.Harga = harga
+	jadwal.Status = c.FormValue("status")
+
+	database.DB.Save(&jadwal)
+
 	return c.Redirect("/admin/jadwal")
 }
 
 func (AdminController) JadwalHapus(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	database.DB.Delete(&models.Schedule{}, id)
+
 	return c.Redirect("/admin/jadwal")
 }
 

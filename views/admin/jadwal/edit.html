@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-1.5">
     <a href="/admin/jadwal" class="text-primary/60 text-[10px] sm:text-[11px] tracking-[1.5px] font-bold hover:text-primary transition w-fit">JADWAL TAYANG > EDIT JADWAL</a>
     <h1 class="text-primary font-extrabold text-[28px] sm:text-[32px] lg:text-[36px]">Edit Jadwal</h1>
-    <p class="text-primary/70 text-[12px] sm:text-[14px]">Perbarui jadwal tayang "{{.Jadwal.Film}}".</p>
+    <p class="text-primary/70 text-[12px] sm:text-[14px]">Perbarui jadwal tayang "{{.Jadwal.Film.Judul}}".</p>
   </div>
 
   <form method="POST" action="/admin/jadwal/edit/{{.ID}}" class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-4 sm:gap-5">
@@ -28,7 +28,7 @@
       <div class="flex items-center justify-between h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
         <select name="studio_id" required class="flex-1 bg-transparent text-primary text-[12px] sm:text-[13px] focus:outline-none appearance-none">
           {{range .Studios}}
-          <option value="{{.ID}}" class="bg-dark" {{if eq .ID $.Jadwal.StudioID}}selected{{end}}>{{.Nama}} — {{.Tipe}} ({{.Baris}}×{{.KursiPerBaris}})</option>
+          <option value="{{.ID}}" class="bg-dark" {{if eq .ID $.Jadwal.StudioID}}selected{{end}}>{{.NamaStudio}} ({{.JumlahBaris}} × {{.JumlahKolom}})</option>
           {{end}}
         </select>
         <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-primary opacity-70 flex-shrink-0"></i>
@@ -42,7 +42,7 @@
         </div>
         <div class="flex items-center gap-2.5 h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
           <i data-lucide="calendar" class="w-4 h-4 text-primary opacity-60 flex-shrink-0"></i>
-          <input name="tanggal" type="date" required value="{{.Jadwal.TanggalISO}}"
+          <input name="tanggal" type="date" required value="{{.TanggalISO}}"
             class="flex-1 min-w-0 bg-transparent text-primary text-[12px] sm:text-[13px] focus:outline-none scheme:dark" />
         </div>
       </div>
@@ -53,7 +53,7 @@
         </div>
         <div class="flex items-center gap-2.5 h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
           <i data-lucide="clock-3" class="w-4 h-4 text-primary opacity-60 flex-shrink-0"></i>
-          <input name="jam" type="time" required value="{{.Jadwal.Jam}}"
+          <input name="jam" type="time" required value="{{.Jadwal.JamTayang}}"
             class="flex-1 min-w-0 bg-transparent text-primary text-[12px] sm:text-[13px] focus:outline-none scheme:dark" />
         </div>
       </div>
@@ -64,7 +64,7 @@
           <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">HARGA (RP)</label>
           <span class="text-primary opacity-50 text-[11px]">*</span>
         </div>
-        <input name="harga" type="number" required min="0" value="{{.Jadwal.HargaNum}}"
+        <input name="harga" type="number" required min="0" value="{{.Jadwal.Harga}}"
           class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors" />
       </div>
       <div class="flex flex-col gap-1.5">
