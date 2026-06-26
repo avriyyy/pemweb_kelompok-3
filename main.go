@@ -4,11 +4,13 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/template/html/v2"
 
 	"toktik/database"
 	"toktik/routes"
 )
+var Store = session.New()
 
 func main() {
 	engine := html.New("./views", ".html")

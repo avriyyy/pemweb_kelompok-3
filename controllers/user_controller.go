@@ -8,9 +8,13 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/gofiber/fiber/v2"
 
 	"toktik/data"
+	"toktik/database"
+	"toktik/models"
 )
 
 type UserController struct{}
@@ -101,13 +105,26 @@ func (UserController) Beranda(c *fiber.Ctx) error {
 		})
 	}
 
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
+
 	return c.Render("user/beranda/index", fiber.Map{
-		"Title":      "Beranda",
-		"Active":     "home",
-		"Initial":    "A",
-		"Featured":   featured,
-		"NowShowing": nowShowing,
-	}, "layouts/user")
+    "Title":      "Beranda",
+    "Active":     "home",
+    "Initial":    initial,
+    "Nama":       user.Nama,
+    "Email":      user.Email,
+    "Featured":   featured,
+    "NowShowing": nowShowing,
+}, "layouts/user")
 }
 
 func (UserController) TiketIndex(c *fiber.Ctx) error {
@@ -196,11 +213,21 @@ func (UserController) TiketIndex(c *fiber.Ctx) error {
 			"Jams":       s.Jams,
 		})
 	}
+	userID := c.Cookies("user_id")
 
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
 	return c.Render("user/tiket/index", fiber.Map{
 		"Title":   "Tiket",
 		"Active":  "tiket",
-		"Initial": "A",
+		"Initial": initial,
+		"Nama":    user.Nama,
 		"Dates":   dates,
 		"Jadwals": jadwals,
 	}, "layouts/user")
@@ -349,12 +376,33 @@ func (UserController) TiketBeli(c *fiber.Ctx) error {
 		activeKey = gridKeys[0]
 	}
 
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
+
 	return c.Render("user/tiket/beli_tiket", fiber.Map{
 		"Title":      "Beli Tiket",
 		"Active":     "tiket",
-		"Initial":    "A",
+		"Initial":    initial,
+		"Nama":       user.Nama,
 		"ID":         id,
-		"Film":       fiber.Map{"ID": film.ID, "Judul": film.Judul, "Genre": film.Genre, "Durasi": film.Durasi, "Synopsis": film.Synopsis, "Rating": film.Rating, "Poster": film.Poster, "PosterColor": film.PosterColor},
+		"Film": fiber.Map{
+			"ID":          film.ID,
+			"Judul":       film.Judul,
+			"Genre":       film.Genre,
+			"Durasi":      film.Durasi,
+			"Synopsis":    film.Synopsis,
+			"Rating":      film.Rating,
+			"Poster":      film.Poster,
+			"PosterColor": film.PosterColor,
+		},
 		"Times":      times,
 		"Tipe":       soonestTipe,
 		"Jam":        soonestJam,
@@ -386,24 +434,36 @@ func (UserController) TiketBayar(c *fiber.Ctx) error {
 	subtotal := len(seats) * pricePerSeat
 	total := subtotal
 
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
 	return c.Render("user/tiket/bayar", fiber.Map{
-		"Title":      "Pembayaran",
-		"Active":     "tiket",
-		"Initial":    "A",
-		"ID":         id,
-		"Judul":      "Echoes of the Unknown",
-		"Genre":      "Fiksi Ilmiah, 2j 28m",
-		"Tanggal":    "23 Juni 2026",
-		"Jam":        "20:00",
-		"Studio":     "Studio 4 - Premiere",
-		"Tipe":       "Premiere",
-		"Seats":      seats,
-		"SeatCount":  len(seats),
-		"Subtotal":   data.FormatRupiah(subtotal),
-		"Total":      data.FormatRupiah(total),
-		"Payments":   payments,
-		"Nama":       "Andi Pratama",
-		"Email":      "andi@email.com",
+		"Title":     "Pembayaran",
+		"Active":    "tiket",
+		"Initial":   initial,
+		"Nama":      user.Nama,
+		"Email":     user.Email,
+
+		"ID":        id,
+		"Judul":     "Echoes of the Unknown",
+		"Genre":     "Fiksi Ilmiah, 2j 28m",
+		"Tanggal":   "23 Juni 2026",
+		"Jam":       "20:00",
+		"Studio":    "Studio 4 - Premiere",
+		"Tipe":      "Premiere",
+
+		"Seats":     seats,
+		"SeatCount": len(seats),
+		"Subtotal":  data.FormatRupiah(subtotal),
+		"Total":     data.FormatRupiah(total),
+		"Payments":  payments,
 	}, "layouts/user")
 }
 
@@ -412,10 +472,23 @@ func (UserController) TiketBayarSubmit(c *fiber.Ctx) error {
 }
 
 func (UserController) TiketBerhasil(c *fiber.Ctx) error {
+
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
+
 	return c.Render("user/tiket/berhasil", fiber.Map{
 		"Title":       "Pembayaran Berhasil",
 		"Active":      "tiket",
-		"Initial":     "A",
+		"Initial":     initial,
+		"Nama":        user.Nama,
 		"KodeBooking": c.Params("id"),
 		"Seats":       "B04, C06, C07, E08",
 		"SeatCount":   4,
@@ -435,10 +508,23 @@ func (UserController) TiketSaya(c *fiber.Ctx) error {
 		}
 		tickets[i] = t
 	}
+
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
+
 	return c.Render("user/tiket_saya/index", fiber.Map{
 		"Title":   "Tiket Saya",
 		"Active":  "tiket-saya",
-		"Initial": "A",
+		"Initial": initial,
+		"Nama":    user.Nama,
 		"Tickets": tickets,
 	}, "layouts/user")
 }
@@ -474,11 +560,23 @@ func (UserController) LihatTiket(c *fiber.Ctx) error {
 		})
 	}
 
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	database.DB.First(&user, userID)
+
+	initial := ""
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
+
 	tj, _ := json.Marshal(tickets)
-	return c.Render("user/tiket_saya/lihat_tiket", fiber.Map{
+		return c.Render("user/tiket_saya/lihat_tiket", fiber.Map{
 		"Title":       "Lihat Tiket",
 		"Active":      "tiket-saya",
-		"Initial":     "A",
+		"Initial":     initial,
+		"Nama":        user.Nama,
 		"ID":          c.Params("id"),
 		"Ticket":      ticket,
 		"Tickets":     tickets,
@@ -487,19 +585,79 @@ func (UserController) LihatTiket(c *fiber.Ctx) error {
 }
 
 func (UserController) Profile(c *fiber.Ctx) error {
-	u := data.Users[0]
+
+	userID := c.Cookies("user_id")
+
+	var user models.User
+
+	if err := database.DB.First(&user, userID).Error; err != nil {
+		return c.Redirect("/login")
+	}
+
+	initial := ""
+
+	if len(user.Nama) > 0 {
+		initial = string(user.Nama[0])
+	}
+
 	return c.Render("user/profile", fiber.Map{
-		"Title":    "Profil Saya",
-		"Active":   "profile",
-		"Initial":  u.Initial,
-		"Nama":     u.Nama,
-		"Email":    u.Email,
-		"AvatarBg": u.AvatarBg,
+		"Title":   "Profil Saya",
+		"Active":  "profile",
+		"Initial": initial,
+		"Nama":    user.Nama,
+		"Email":   user.Email,
+		"Role":    user.Role,
 	}, "layouts/user")
 }
 
 func (UserController) ProfileUpdate(c *fiber.Ctx) error {
-	return c.Redirect("/profile?success=1")
+
+    userID := c.Cookies("user_id")
+
+    var user models.User
+
+    if err := database.DB.First(&user, userID).Error; err != nil {
+        return c.Redirect("/login")
+    }
+
+    nama := c.FormValue("nama")
+    email := c.FormValue("email")
+
+    user.Nama = nama
+    user.Email = email
+
+    currentPassword := c.FormValue("current_password")
+    newPassword := c.FormValue("new_password")
+    confirmPassword := c.FormValue("confirm_password")
+
+    if newPassword != "" {
+
+        err := bcrypt.CompareHashAndPassword(
+            []byte(user.Password),
+            []byte(currentPassword),
+        )
+
+        if err != nil {
+            return c.Redirect("/profile?error=Password+lama+salah")
+        }
+
+        if newPassword != confirmPassword {
+            return c.Redirect("/profile?error=Konfirmasi+password+tidak+cocok")
+        }
+
+        hash, _ := bcrypt.GenerateFromPassword(
+            []byte(newPassword),
+            bcrypt.DefaultCost,
+        )
+
+        user.Password = string(hash)
+    }
+
+    if err := database.DB.Save(&user).Error; err != nil {
+        return c.Redirect("/profile?error=Gagal+menyimpan")
+    }
+
+    return c.Redirect("/profile?success=1")
 }
 
 func contains(slice []string, item string) bool {

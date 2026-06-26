@@ -8,6 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"toktik/data"
+	"toktik/database"
+	"toktik/models"
 )
 
 type AdminController struct{}
@@ -360,20 +362,48 @@ func (AdminController) TransaksiDetail(c *fiber.Ctx) error {
 }
 
 func (AdminController) UserIndex(c *fiber.Ctx) error {
-	users := make([]fiber.Map, 0, len(data.Users))
-	for _, u := range data.Users {
-		users = append(users, fiber.Map{
-			"ID":       u.ID,
-			"Nama":     u.Nama,
-			"Email":    u.Email,
-			"Role":     u.Role,
-			"JoinDate": u.JoinDate,
-			"Status":   u.Status,
-			"AvatarBg": u.AvatarBg,
-			"Initial":  u.Initial,
-		})
+
+	var users []models.User
+
+	if err := database.DB.Find(&users).Error; err != nil {
+		return c.SendString("Gagal mengambil data user")
 	}
+
 	return c.Render("admin/user/index", fiber.Map{
-		"Title": "Manajemen User", "Active": "user", "Users": users,
+		"Title":  "Manajemen User",
+		"Active": "user",
+		"Users":  users,
 	}, "layouts/admin")
 }
+
+func (AdminController) JadikanAdmin(c *fiber.Ctx) error {
+
+	id, _ := strconv.Atoi(c.Params("id"))
+
+	database.DB.Model(&models.User{}).
+		Where("id = ?", id).
+		Update("role", "admin")
+
+	return c.Redirect("/admin/user")
+}
+
+func (AdminController) JadikanUser(c *fiber.Ctx) error {
+
+	id, _ := strconv.Atoi(c.Params("id"))
+
+	database.DB.Model(&models.User{}).
+		Where("id = ?", id).
+		Update("role", "user")
+
+	return c.Redirect("/admin/user")
+}
+
+func (AdminController) UserHapus(c *fiber.Ctx) error {
+
+	id, _ := strconv.Atoi(c.Params("id"))
+
+	database.DB.Delete(&models.User{}, id)
+
+	return c.Redirect("/admin/user")
+}
+

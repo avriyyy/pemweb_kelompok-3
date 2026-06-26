@@ -41,30 +41,34 @@
               <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.Email}}</span>
             </td>
             <td class="px-3 sm:px-4 py-3 sm:py-3.5 hidden md:table-cell">
-              <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.JoinDate}}</span>
+              <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.CreatedAt.Format "02 Jan 2006"}}</span>
             </td>
             <td class="px-3 sm:px-4 py-3 sm:py-3.5">
-              {{if eq .Role "Admin"}}
-              <span class="inline-block bg-primary text-dark text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">Admin</span>
+              {{if eq .Role "admin"}}
+              <span class="inline-block bg-primary text-dark text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">admin</span>
               {{else}}
-              <span class="inline-block bg-primary/20 text-primary text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">User</span>
+              <span class="inline-block bg-primary/20 text-primary text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">user</span>
               {{end}}
             </td>
             <td class="px-4 sm:px-5 py-3 sm:py-3.5">
               <div class="flex items-center justify-end gap-1.5 sm:gap-2">
-                {{if eq .Role "Admin"}}
-                <button class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-lg bg-primary text-dark font-bold text-[11px] sm:text-[12px] hover:bg-primary-hover transition">
-                  Jadikan User
-                </button>
+                {{if eq .Role "admin"}}
+                <form method="POST" action="/admin/user/user/{{.ID}}" class="inline">
+                  <button type="submit" class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-lg bg-primary text-dark font-bold text-[11px] sm:text-[12px] hover:bg-primary-hover transition">
+                    Jadikan User
+                  </button>
+                </form>
                 <form method="POST" action="/admin/user/hapus/{{.ID}}" onsubmit="return confirm('Yakin ingin menghapus user ini?')" class="inline">
                   <button type="submit" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-dark-soft border border-primary/30 text-primary flex items-center justify-center hover:bg-red-500/20 transition" title="Hapus">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                   </button>
                 </form>
                 {{else}}
-                <button class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-lg bg-primary text-dark font-bold text-[11px] sm:text-[12px] hover:bg-primary-hover transition">
-                  Jadikan Admin
-                </button>
+                <form method="POST" action="/admin/user/admin/{{.ID}}" class="inline">
+                  <button type="submit" class="h-7 sm:h-8 px-2.5 sm:px-3 rounded-lg bg-primary text-dark font-bold text-[11px] sm:text-[12px] hover:bg-primary-hover transition">
+                    Jadikan Admin
+                  </button>
+                </form>
                 <form method="POST" action="/admin/user/hapus/{{.ID}}" onsubmit="return confirm('Yakin ingin menghapus user ini?')" class="inline">
                   <button type="submit" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-dark-soft border border-primary/30 text-primary flex items-center justify-center hover:bg-red-500/20 transition" title="Hapus">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
