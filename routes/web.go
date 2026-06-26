@@ -12,7 +12,10 @@ func Web(app *fiber.App) {
 	usr := controllers.UserController{}
 	adm := controllers.AdminController{}
 
-	app.Get("/", usr.Beranda)
+	app.Get("/",
+    middleware.AuthOnly(),
+    usr.Beranda,
+)
 
 	app.Get("/login", auth.LoginPage)
 	app.Post("/login", auth.LoginSubmit)
@@ -20,18 +23,43 @@ func Web(app *fiber.App) {
 	app.Post("/register", auth.RegisterSubmit)
 	app.Get("/logout", auth.Logout)
 
-	app.Get("/tiket", usr.TiketIndex)
-	app.Get("/tiket/beli/:id", usr.TiketBeli)
-	app.Post("/tiket/beli/:id", usr.TiketBeliSubmit)
-	app.Get("/tiket/bayar/:id", usr.TiketBayar)
-	app.Post("/tiket/bayar/:id", usr.TiketBayarSubmit)
-	app.Get("/tiket/berhasil/:id", usr.TiketBerhasil)
+	app.Get("/tiket", middleware.AuthOnly(), usr.TiketIndex)
 
-	app.Get("/tiket-saya", usr.TiketSaya)
-	app.Get("/tiket-saya/:id", usr.LihatTiket)
+	app.Get("/tiket/beli/:id",
+		middleware.AuthOnly(),
+		usr.TiketBeli)
 
-	app.Get("/profile", usr.Profile)
-	app.Post("/profile", usr.ProfileUpdate)
+	app.Post("/tiket/beli/:id",
+		middleware.AuthOnly(),
+		usr.TiketBeliSubmit)
+
+	app.Get("/tiket/bayar/:id",
+		middleware.AuthOnly(),
+		usr.TiketBayar)
+
+	app.Post("/tiket/bayar/:id",
+		middleware.AuthOnly(),
+		usr.TiketBayarSubmit)
+
+	app.Get("/tiket/berhasil/:id",
+		middleware.AuthOnly(),
+		usr.TiketBerhasil)
+
+	app.Get("/tiket-saya",
+		middleware.AuthOnly(),
+		usr.TiketSaya)
+
+	app.Get("/tiket-saya/:id",
+		middleware.AuthOnly(),
+		usr.LihatTiket)
+
+	app.Get("/profile",
+		middleware.AuthOnly(),
+		usr.Profile)
+
+	app.Post("/profile",
+		middleware.AuthOnly(),
+		usr.ProfileUpdate)
 
 	admin := app.Group("/admin", middleware.AdminOnly())
 	admin.Get("/", adm.Dashboard)
@@ -61,4 +89,8 @@ func Web(app *fiber.App) {
 	admin.Get("/transaksi/:id", adm.TransaksiDetail)
 
 	admin.Get("/user", adm.UserIndex)
+
+	admin.Post("/user/admin/:id", adm.JadikanAdmin)
+	admin.Post("/user/user/:id", adm.JadikanUser)
+	admin.Post("/user/hapus/:id", adm.UserHapus)
 }
