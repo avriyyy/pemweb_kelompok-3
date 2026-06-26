@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -357,58 +358,91 @@ func (AdminController) JadwalHapus(c *fiber.Ctx) error {
 }
 
 func (AdminController) StudioIndex(c *fiber.Ctx) error {
-	studios := make([]fiber.Map, 0, len(data.Studios))
-	for _, s := range data.Studios {
-		studios = append(studios, fiber.Map{
-			"ID":            s.ID,
-			"Nama":          s.Nama,
-			"Tipe":          s.Tipe,
-			"Baris":         s.Baris,
-			"KursiPerBaris": s.KursiPerBaris,
-			"Status":        s.Status,
-			"Bg":            s.Bg,
-		})
-	}
+
+	var studios []models.Studio
+
+	result := database.DB.Find(&studios)
+
+	fmt.Println("Rows =", result.RowsAffected)
+	fmt.Printf("Studios = %+v\n", studios)
+
 	return c.Render("admin/studio/index", fiber.Map{
-		"Title": "Manajemen Studio", "Active": "studio", "Studios": studios,
+		"Title":   "Manajemen Studio",
+		"Active":  "studio",
+		"Studios": studios,
 	}, "layouts/admin")
 }
 
 func (AdminController) StudioTambah(c *fiber.Ctx) error {
 	return c.Render("admin/studio/tambah", fiber.Map{
-		"Title": "Tambah Studio", "Active": "studio",
+		"Title":  "Tambah Studio",
+		"Active": "studio",
 	}, "layouts/admin")
 }
 
 func (AdminController) StudioTambahSubmit(c *fiber.Ctx) error {
+
+	baris, _ := strconv.Atoi(c.FormValue("baris"))
+	kolom, _ := strconv.Atoi(c.FormValue("kursi_per_baris"))
+
+	studio := models.Studio{
+		NamaStudio:  c.FormValue("nama"),
+		JumlahBaris: baris,
+		JumlahKolom: kolom,
+	}
+
+	if err := database.DB.Create(&studio).Error; err != nil {
+		return c.SendString(err.Error())
+	}
+
 	return c.Redirect("/admin/studio")
 }
 
 func (AdminController) StudioEdit(c *fiber.Ctx) error {
-	id := data.ParseID(c.Params("id"))
-	studio := data.FindStudioByID(id)
-	if studio == nil {
+
+	id := c.Params("id")
+
+	var studio models.Studio
+
+	if err := database.DB.First(&studio, id).Error; err != nil {
 		return c.Redirect("/admin/studio")
 	}
+
 	return c.Render("admin/studio/edit", fiber.Map{
 		"Title":  "Edit Studio",
 		"Active": "studio",
-		"Studio": fiber.Map{
-			"ID":            studio.ID,
-			"Nama":          studio.Nama,
-			"Tipe":          studio.Tipe,
-			"Baris":         studio.Baris,
-			"KursiPerBaris": studio.KursiPerBaris,
-			"Status":        studio.Status,
-		},
+		"Studio": studio,
 	}, "layouts/admin")
 }
 
 func (AdminController) StudioEditSubmit(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	var studio models.Studio
+
+	if err := database.DB.First(&studio, id).Error; err != nil {
+		return c.Redirect("/admin/studio")
+	}
+
+	baris, _ := strconv.Atoi(c.FormValue("baris"))
+	kolom, _ := strconv.Atoi(c.FormValue("kursi_per_baris"))
+
+	studio.NamaStudio = c.FormValue("nama")
+	studio.JumlahBaris = baris
+	studio.JumlahKolom = kolom
+
+	database.DB.Save(&studio)
+
 	return c.Redirect("/admin/studio")
 }
 
 func (AdminController) StudioHapus(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	database.DB.Delete(&models.Studio{}, id)
+
 	return c.Redirect("/admin/studio")
 }
 
@@ -500,4 +534,3 @@ func (AdminController) UserHapus(c *fiber.Ctx) error {
 
 	return c.Redirect("/admin/user")
 }
-
