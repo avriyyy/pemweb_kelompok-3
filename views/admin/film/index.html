@@ -39,7 +39,7 @@
           {{range .Films}}
           <tr class="border-b border-primary/10 last:border-b-0 hover:bg-white/[0.02] transition-colors">
             <td class="px-4 sm:px-5 py-3 sm:py-3.5">
-              <div class="relative {{.PosterBg}} w-10 h-14 sm:w-12 sm:h-16 rounded-md flex-shrink-0 overflow-hidden">
+              <div class="relative bg-gray-700 w-10 h-14 sm:w-12 sm:h-16 rounded-md flex-shrink-0 overflow-hidden">
                 {{if .Poster}}<img src="{{.Poster}}" alt="{{.Judul}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />{{end}}
               </div>
             </td>

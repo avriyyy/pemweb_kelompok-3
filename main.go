@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/template/html/v2"
 
 	"toktik/database"
+	"toktik/models"
 	"toktik/routes"
 )
 var Store = session.New()
@@ -25,6 +26,10 @@ func main() {
 	app.Static("/assets", "./assets")
 
 	database.Connect()
+
+	database.DB.AutoMigrate(
+		&models.Film{},
+	)
 
 	routes.Web(app)
 
