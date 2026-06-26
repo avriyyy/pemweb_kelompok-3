@@ -4,10 +4,13 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 
 	"toktik/data"
+	"toktik/database"
+	"toktik/models"
 )
 
 type AdminController struct{}
@@ -92,23 +95,35 @@ func (AdminController) Dashboard(c *fiber.Ctx) error {
 	}, "layouts/admin")
 }
 
+//	func (AdminController) FilmIndex(c *fiber.Ctx) error {
+//		films := make([]fiber.Map, 0, len(data.Films))
+//		for _, f := range data.Films {
+//			films = append(films, fiber.Map{
+//				"ID":          f.ID,
+//				"Judul":       f.Judul,
+//				"Genre":       f.Genre,
+//				"Durasi":      f.Durasi,
+//				"Rating":      f.Rating,
+//				"Status":      f.Status,
+//				"PosterColor": f.PosterColor,
+//				"Poster":      f.Poster,
+//				"Tanggal":     f.Tanggal,
+//			})
+//		}
+//		return c.Render("admin/film/index", fiber.Map{
+//			"Title": "Manajemen Film", "Active": "film", "Films": films,
+//		}, "layouts/admin")
+//	}
 func (AdminController) FilmIndex(c *fiber.Ctx) error {
-	films := make([]fiber.Map, 0, len(data.Films))
-	for _, f := range data.Films {
-		films = append(films, fiber.Map{
-			"ID":          f.ID,
-			"Judul":       f.Judul,
-			"Genre":       f.Genre,
-			"Durasi":      f.Durasi,
-			"Rating":      f.Rating,
-			"Status":      f.Status,
-			"PosterColor": f.PosterColor,
-			"Poster":      f.Poster,
-			"Tanggal":     f.Tanggal,
-		})
-	}
+
+	var films []models.Film
+
+	database.DB.Find(&films)
+
 	return c.Render("admin/film/index", fiber.Map{
-		"Title": "Manajemen Film", "Active": "film", "Films": films,
+		"Title":  "Manajemen Film",
+		"Active": "film",
+		"Films":  films,
 	}, "layouts/admin")
 }
 
@@ -118,47 +133,131 @@ func (AdminController) FilmTambah(c *fiber.Ctx) error {
 	}, "layouts/admin")
 }
 
+//	func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
+//		posterURL := strings.TrimSpace(c.FormValue("poster_url"))
+//		if posterURL == "" {
+//			posterURL = "https://picsum.photos/seed/" + strings.ToLower(strings.ReplaceAll(c.FormValue("judul"), " ", "-")) + "/400/600"
+//		}
+//		return c.Redirect("/admin/film?poster=" + posterURL)
+//	}
 func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
-	posterURL := strings.TrimSpace(c.FormValue("poster_url"))
-	if posterURL == "" {
-		posterURL = "https://picsum.photos/seed/" + strings.ToLower(strings.ReplaceAll(c.FormValue("judul"), " ", "-")) + "/400/600"
-	}
-	return c.Redirect("/admin/film?poster=" + posterURL)
-}
 
-func (AdminController) FilmEdit(c *fiber.Ctx) error {
-	id := data.ParseID(c.Params("id"))
-	var film *data.Film
-	for i, f := range data.Films {
-		if f.ID == strconv.FormatUint(uint64(id), 10) {
-			film = &data.Films[i]
-			break
-		}
-	}
-	if film == nil {
-		return c.Redirect("/admin/film")
-	}
-	return c.Render("admin/film/edit", fiber.Map{
-		"Title": "Edit Film", "Active": "film", "Film": fiber.Map{
-			"ID":          film.ID,
-			"Judul":       film.Judul,
-			"Genre":       film.Genre,
-			"Durasi":      film.Durasi,
-			"Rating":      film.Rating,
-			"Synopsis":    film.Synopsis,
-			"Status":      film.Status,
-			"PosterColor": film.PosterColor,
-			"Poster":      film.Poster,
-			"Tanggal":     film.Tanggal,
-		},
-	}, "layouts/admin")
-}
+	durasi, _ := strconv.Atoi(c.FormValue("durasi"))
+	harga, _ := strconv.ParseFloat(c.FormValue("harga"), 64)
 
-func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
+	tanggalRilis, _ := time.Parse(
+		"2006-01-02",
+		c.FormValue("tanggal_rilis"),
+	)
+
+	film := models.Film{
+		Judul:        c.FormValue("judul"),
+		Genre:        c.FormValue("genre"),
+		Durasi:       durasi,
+		Sinopsis:     c.FormValue("sinopsis"),
+		Poster:       c.FormValue("poster_url"),
+		Rating:       c.FormValue("rating"),
+		TanggalRilis: tanggalRilis,
+		Status:       c.FormValue("status"),
+		Harga:        harga,
+	}
+
+	if err := database.DB.Create(&film).Error; err != nil {
+		return c.SendString(err.Error())
+	}
+
 	return c.Redirect("/admin/film")
 }
 
+//	func (AdminController) FilmEdit(c *fiber.Ctx) error {
+//		id := data.ParseID(c.Params("id"))
+//		var film *data.Film
+//		for i, f := range data.Films {
+//			if f.ID == strconv.FormatUint(uint64(id), 10) {
+//				film = &data.Films[i]
+//				break
+//			}
+//		}
+//		if film == nil {
+//			return c.Redirect("/admin/film")
+//		}
+//		return c.Render("admin/film/edit", fiber.Map{
+//			"Title": "Edit Film", "Active": "film", "Film": fiber.Map{
+//				"ID":          film.ID,
+//				"Judul":       film.Judul,
+//				"Genre":       film.Genre,
+//				"Durasi":      film.Durasi,
+//				"Rating":      film.Rating,
+//				"Synopsis":    film.Synopsis,
+//				"Status":      film.Status,
+//				"PosterColor": film.PosterColor,
+//				"Poster":      film.Poster,
+//				"Tanggal":     film.Tanggal,
+//			},
+//		}, "layouts/admin")
+//	}
+func (AdminController) FilmEdit(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	var film models.Film
+
+	if err := database.DB.First(&film, id).Error; err != nil {
+		return c.Redirect("/admin/film")
+	}
+
+	return c.Render("admin/film/edit", fiber.Map{
+		"Title":  "Edit Film",
+		"Active": "film",
+		"Film":   film,
+	}, "layouts/admin")
+}
+
+//	func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
+//		return c.Redirect("/admin/film")
+//	}
+func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	var film models.Film
+
+	if err := database.DB.First(&film, id).Error; err != nil {
+		return c.Redirect("/admin/film")
+	}
+
+	durasi, _ := strconv.Atoi(c.FormValue("durasi"))
+	harga, _ := strconv.ParseFloat(c.FormValue("harga"), 64)
+
+	tanggalRilis, _ := time.Parse(
+		"2006-01-02",
+		c.FormValue("tanggal_rilis"),
+	)
+
+	film.Judul = c.FormValue("judul")
+	film.Genre = c.FormValue("genre")
+	film.Durasi = durasi
+	film.Sinopsis = c.FormValue("sinopsis")
+	film.Poster = c.FormValue("poster_url")
+	film.Rating = c.FormValue("rating")
+	film.TanggalRilis = tanggalRilis
+	film.Status = c.FormValue("status")
+	film.Harga = harga
+
+	database.DB.Save(&film)
+
+	return c.Redirect("/admin/film")
+}
+
+//	func (AdminController) FilmHapus(c *fiber.Ctx) error {
+//		return c.Redirect("/admin/film")
+//	}
 func (AdminController) FilmHapus(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	database.DB.Delete(&models.Film{}, id)
+
 	return c.Redirect("/admin/film")
 }
 

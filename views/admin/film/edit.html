@@ -5,12 +5,23 @@
     <p class="text-primary/70 text-[12px] sm:text-[14px]">Perbarui informasi film "{{.Film.Judul}}".</p>
   </div>
 
-  <form method="POST" action="/admin/film/edit/{{.ID}}" class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-5 sm:gap-6">
+  <form method="POST" action="/admin/film/edit/{{.Film.ID}}" class="bg-dark border border-primary/40 rounded-2xl p-5 sm:p-7 lg:p-8 flex flex-col gap-5 sm:gap-6">
     <div class="flex flex-col lg:flex-row gap-5 sm:gap-6">
       <div class="w-full lg:w-[280px] flex-shrink-0">
         <div class="bg-dark-soft border border-primary/40 rounded-xl p-5 sm:p-6 flex flex-col gap-3 items-stretch">
-          <div class="relative {{.Film.PosterBg}} rounded-lg h-[200px] sm:h-[220px] overflow-hidden">
+          <div class="relative rounded-lg h-[200px] sm:h-[220px] overflow-hidden bg-dark-soft">
             {{if .Film.Poster}}<img src="{{.Film.Poster}}" alt="{{.Film.Judul}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />{{end}}
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-primary text-[11px] sm:text-[12px] font-semibold">
+              URL POSTER
+            </label>
+
+            <input
+              name="poster_url"
+              type="url"
+              value="{{.Film.Poster}}"
+              class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary">
           </div>
           <button type="button" class="flex items-center justify-center gap-1.5 h-9 sm:h-10 bg-dark border border-primary/40 text-primary text-[12px] font-semibold rounded-lg hover:bg-dark-elevated transition">
             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
@@ -31,7 +42,7 @@
         <div class="flex flex-col gap-1.5">
           <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">SINOPSIS</label>
           <textarea name="sinopsis" rows="3" required
-            class="px-4 py-2.5 sm:py-3 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors resize-none">{{.Film.Sinop}}</textarea>
+            class="px-4 py-2.5 sm:py-3 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors resize-none">{{.Film.Sinopsis}}</textarea>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div class="flex flex-col gap-1.5">
@@ -47,19 +58,56 @@
               <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">DURASI</label>
               <span class="text-primary opacity-50 text-[11px]">*</span>
             </div>
-            <input name="durasi" type="text" required value="{{.Film.Durasi}}"
+            <input name="durasi" type="number" required value="{{.Film.Durasi}}"
               class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors" />
           </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-primary text-[12px] font-semibold">
+            HARGA
+          </label>
+
+          <input
+            type="number"
+            name="harga"
+            value="{{.Film.Harga}}"
+            required
+            class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-primary text-[11px] sm:text-[12px] font-semibold">
+            RATING
+          </label>
+
+          <input
+            name="rating"
+            type="text"
+            value="{{.Film.Rating}}"
+            class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary">
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label class="text-primary text-[11px] sm:text-[12px] font-semibold">
+            TANGGAL RILIS
+          </label>
+
+          <input
+            type="date"
+            name="tanggal_rilis"
+            class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary">
         </div>
         <div class="flex flex-col gap-1.5">
           <div class="flex items-center gap-1">
             <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">STATUS</label>
             <span class="text-primary opacity-50 text-[11px]">*</span>
           </div>
-          <div class="flex items-center justify-between h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
-            <span class="text-primary text-[12px] sm:text-[13px]">{{.Film.Status}}</span>
-            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-primary opacity-70"></i>
-          </div>
+          <select
+            name="status"
+            class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary">
+
+            <option value="Aktif">Aktif</option>
+            <option value="Tidak Aktif">Tidak Aktif</option>
+
+          </select>
         </div>
       </div>
     </div>
