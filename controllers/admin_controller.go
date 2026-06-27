@@ -406,7 +406,7 @@ func (AdminController) TransaksiDetail(c *fiber.Ctx) error {
 		"Metode":  transaksi.MetodeBayar,
 		"Total":   models.FormatRupiah(transaksi.TotalHarga),
 		"Status":  status,
-		"FilmBg":  "bg-primary",
+		"Poster":  transaksi.Schedule.Film.Poster,
 	}
 
 	return c.Render("admin/transaksi/detail", fiber.Map{
