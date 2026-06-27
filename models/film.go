@@ -14,7 +14,6 @@ type Film struct {
 	Status       string    `gorm:"size:20;default:active" json:"status"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
-	Harga        float64   `gorm:"type:decimal(10,2)"`
 }
 
 func (Film) TableName() string { return "films" }

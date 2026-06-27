@@ -227,7 +227,6 @@ func (AdminController) FilmTambah(c *fiber.Ctx) error {
 
 func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
 	durasi, _ := strconv.Atoi(c.FormValue("durasi"))
-	harga, _ := strconv.ParseFloat(c.FormValue("harga"), 64)
 	tanggalRilis, _ := time.Parse("2006-01-02", c.FormValue("tanggal_rilis"))
 
 	film := models.Film{
@@ -239,7 +238,6 @@ func (AdminController) FilmTambahSubmit(c *fiber.Ctx) error {
 		Rating:       c.FormValue("rating"),
 		TanggalRilis: tanggalRilis,
 		Status:       c.FormValue("status"),
-		Harga:        harga,
 	}
 	if err := database.DB.Create(&film).Error; err != nil {
 		return c.SendString(err.Error())
@@ -266,7 +264,6 @@ func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
 	}
 
 	durasi, _ := strconv.Atoi(c.FormValue("durasi"))
-	harga, _ := strconv.ParseFloat(c.FormValue("harga"), 64)
 	tanggalRilis, _ := time.Parse("2006-01-02", c.FormValue("tanggal_rilis"))
 
 	film.Judul = c.FormValue("judul")
@@ -277,7 +274,6 @@ func (AdminController) FilmEditSubmit(c *fiber.Ctx) error {
 	film.Rating = c.FormValue("rating")
 	film.TanggalRilis = tanggalRilis
 	film.Status = c.FormValue("status")
-	film.Harga = harga
 	database.DB.Save(&film)
 	return c.Redirect("/admin/film")
 }

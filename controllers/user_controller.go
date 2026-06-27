@@ -35,7 +35,6 @@ func (UserController) Beranda(c *fiber.Ctx) error {
 			"Rating":   m.Rating,
 			"Synopsis": m.Sinopsis,
 			"Poster":   m.Poster,
-			"Harga":    fmt.Sprintf("%.0f", m.Harga),
 		})
 	}
 
