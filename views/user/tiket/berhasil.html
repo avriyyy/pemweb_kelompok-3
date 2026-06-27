@@ -15,11 +15,11 @@
 
     <div class="flex items-center gap-3 sm:gap-4">
       <div class="bg-primary w-14 h-20 sm:w-20 sm:h-28 rounded-md sm:rounded-[10px] flex items-end p-1.5 sm:p-2 flex-shrink-0">
-        <span class="text-dark text-[9px] sm:text-[10px] font-bold opacity-70">IMAX</span>
+        <span class="text-dark text-[9px] sm:text-[10px] font-bold opacity-70">{{.Tipe}}</span>
       </div>
       <div class="flex flex-col gap-0.5 sm:gap-1 min-w-0">
-        <h2 class="text-primary font-extrabold text-[15px] sm:text-[18px]">Echoes of the Unknown</h2>
-        <p class="text-primary text-[11px] sm:text-[12px] opacity-60">Fiksi Ilmiah · 2j 28m</p>
+        <h2 class="text-primary font-extrabold text-[15px] sm:text-[18px]">{{.Judul}}</h2>
+        <p class="text-primary text-[11px] sm:text-[12px] opacity-60">{{.Genre}} - {{.Durasi}}</p>
       </div>
     </div>
 
@@ -30,21 +30,21 @@
         <i data-lucide="calendar" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
         <div class="min-w-0">
           <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Tanggal</span>
-          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">Senin, 23 Jun 2026</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">{{.Tanggal}}</span>
         </div>
       </div>
       <div class="flex items-center gap-2.5 sm:gap-3">
         <i data-lucide="clock" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
         <div class="min-w-0">
           <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Jam Tayang</span>
-          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">18:00 WIB</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">{{.Jam}}</span>
         </div>
       </div>
       <div class="flex items-center gap-2.5 sm:gap-3">
         <i data-lucide="building" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-70 flex-shrink-0"></i>
         <div class="min-w-0">
           <span class="block text-primary text-[9px] sm:text-[10px] opacity-60 uppercase tracking-wider">Studio</span>
-          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">Studio 4 · Reguler</span>
+          <span class="block text-primary text-[12px] sm:text-[13px] font-semibold">{{.Studio}}</span>
         </div>
       </div>
       <div class="flex items-center gap-2.5 sm:gap-3">
