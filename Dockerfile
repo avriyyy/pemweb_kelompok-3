@@ -9,13 +9,14 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
-FROM alpine:latest  
+FROM alpine:latest
 
 WORKDIR /root/
 
 COPY --from=builder /app/main .
+COPY --from=builder /app/views ./views
+COPY --from=builder /app/assets ./assets
 
 EXPOSE 3000
 
-# Jalankan aplikasi
 CMD ["./main"]
