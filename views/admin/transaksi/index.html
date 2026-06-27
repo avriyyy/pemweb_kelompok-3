@@ -5,16 +5,39 @@
     <p class="text-primary/70 text-[12px] sm:text-[14px]">Pantau semua transaksi pembelian tiket.</p>
   </div>
 
-  <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+  <form method="GET" class="flex items-center gap-2 sm:gap-3 flex-wrap">
     <div class="flex-1 min-w-[200px] flex items-center gap-2.5 sm:gap-3 h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg">
       <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5 text-primary opacity-60 flex-shrink-0"></i>
-      <input type="text" placeholder="Cari kode booking atau nama user..." class="flex-1 min-w-0 bg-transparent text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none" />
+      <input type="text" name="q" placeholder="Cari kode booking atau nama user..." value="{{.Q}}" class="flex-1 min-w-0 bg-transparent text-primary text-[12px] sm:text-[13px] placeholder:text-primary/40 focus:outline-none" />
     </div>
-    <button class="flex items-center gap-2 h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] font-semibold hover:bg-dark-elevated transition">
-      <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-      <span>Filter Status</span>
-    </button>
-  </div>
+    <div class="relative">
+      <button type="button" onclick="toggleDatePicker()" class="w-10 h-10 sm:w-11 sm:h-11 bg-dark-soft border border-primary/40 rounded-lg flex items-center justify-center hover:bg-dark-elevated transition flex-shrink-0">
+        <i data-lucide="calendar" class="w-4 h-4 sm:w-5 sm:h-5 text-primary"></i>
+      </button>
+      <div id="date-picker" class="hidden absolute top-full right-0 mt-2 z-50 bg-dark-soft border border-primary/30 rounded-xl p-4 w-[280px] shadow-xl">
+        <div class="flex items-center justify-between mb-3">
+          <button type="button" onclick="pickerPrevMonth()" class="w-8 h-8 rounded-lg hover:bg-dark-elevated flex items-center justify-center text-primary">
+            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          </button>
+          <span id="picker-month-year" class="text-primary font-bold text-[14px]"></span>
+          <button type="button" onclick="pickerNextMonth()" class="w-8 h-8 rounded-lg hover:bg-dark-elevated flex items-center justify-center text-primary">
+            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div class="grid grid-cols-7 gap-1 mb-2">
+          <span class="text-primary/50 text-[10px] font-bold text-center">Min</span>
+          <span class="text-primary/50 text-[10px] font-bold text-center">Sen</span>
+          <span class="text-primary/50 text-[10px] font-bold text-center">Sel</span>
+          <span class="text-primary/50 text-[10px] font-bold text-center">Rab</span>
+          <span class="text-primary/50 text-[10px] font-bold text-center">Kam</span>
+          <span class="text-primary/50 text-[10px] font-bold text-center">Jum</span>
+          <span class="text-primary/50 text-[10px] font-bold text-center">Sab</span>
+        </div>
+        <div id="picker-days" class="grid grid-cols-7 gap-1"></div>
+      </div>
+      <input type="hidden" name="tanggal" id="tanggal-input" value="{{.Tanggal}}" />
+    </div>
+  </form>
 
   <div class="bg-dark border border-primary/40 rounded-2xl overflow-hidden">
     <div class="overflow-x-auto">
@@ -82,3 +105,61 @@
     </div>
   </div>
 </div>
+
+<script>
+var monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+var pickerDate = new Date();
+var tanggalVal = document.getElementById('tanggal-input').value;
+if (tanggalVal) {
+  var parts = tanggalVal.split('-');
+  pickerDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+}
+
+function renderDays() {
+  var y = pickerDate.getFullYear();
+  var m = pickerDate.getMonth();
+  document.getElementById('picker-month-year').textContent = monthNames[m] + ' ' + y;
+  var firstDay = new Date(y, m, 1).getDay();
+  var daysInMonth = new Date(y, m + 1, 0).getDate();
+  var html = '';
+  for (var i = 0; i < firstDay; i++) {
+    html += '<div></div>';
+  }
+  var today = new Date();
+  var todayStr = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+  for (var d = 1; d <= daysInMonth; d++) {
+    var ds = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    var sel = ds === tanggalVal;
+    var isToday = ds === todayStr;
+    var cls = 'rounded-lg py-1.5 text-[12px] font-semibold text-center transition cursor-pointer ' +
+      (sel ? 'bg-primary text-dark' : 'hover:bg-dark-elevated ') +
+      (isToday && !sel ? 'text-primary' : '') +
+      (!sel && !isToday ? 'text-primary/70' : '');
+    html += '<button type="button" onclick="selectDate(\'' + ds + '\')" class="' + cls + '">' + d + '</button>';
+  }
+  document.getElementById('picker-days').innerHTML = html;
+}
+
+function toggleDatePicker() {
+  var p = document.getElementById('date-picker');
+  p.classList.toggle('hidden');
+  if (!p.classList.contains('hidden')) renderDays();
+}
+
+function pickerPrevMonth() { pickerDate.setMonth(pickerDate.getMonth() - 1); renderDays(); }
+function pickerNextMonth() { pickerDate.setMonth(pickerDate.getMonth() + 1); renderDays(); }
+
+function selectDate(ds) {
+  tanggalVal = ds;
+  document.getElementById('tanggal-input').value = ds;
+  document.getElementById('date-picker').classList.add('hidden');
+  document.querySelector('form').submit();
+}
+
+document.addEventListener('click', function(e) {
+  var picker = document.getElementById('date-picker');
+  if (!picker.classList.contains('hidden') && !e.target.closest('.relative')) {
+    picker.classList.add('hidden');
+  }
+});
+</script>

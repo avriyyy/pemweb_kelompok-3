@@ -14,17 +14,42 @@ import (
 type AdminController struct{}
 
 func (AdminController) Dashboard(c *fiber.Ctx) error {
+	r := c.Query("range")
+	if r == "" {
+		r = "week"
+	}
+
+	var since time.Time
+	switch r {
+	case "day":
+		since = time.Now().Truncate(24 * time.Hour)
+	case "week":
+		now := time.Now()
+		since = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).AddDate(0, 0, -6)
+	case "month":
+		since = time.Now().AddDate(0, 0, -30)
+	default:
+		r = "week"
+		now := time.Now()
+		since = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).AddDate(0, 0, -6)
+	}
+
 	var totalTiket int64
-	database.DB.Model(&models.Tiket{}).Count(&totalTiket)
+	database.DB.Model(&models.Tiket{}).
+		Joins("JOIN transaksis ON transaksis.id = tikets.transaksi_id").
+		Where("transaksis.created_at >= ?", since).
+		Count(&totalTiket)
 
 	var totalPendapatan int64
 	database.DB.Model(&models.Transaksi{}).
-		Where("status IN ?", []string{"Selesai", "selesai", "lunas"}).
+		Where("status IN ? AND created_at >= ?", []string{"Selesai", "selesai", "lunas"}, since).
 		Select("COALESCE(SUM(total_harga), 0)").
 		Scan(&totalPendapatan)
 
 	var totalTransaksi int64
-	database.DB.Model(&models.Transaksi{}).Count(&totalTransaksi)
+	database.DB.Model(&models.Transaksi{}).
+		Where("created_at >= ?", since).
+		Count(&totalTransaksi)
 
 	var totalUser int64
 	database.DB.Model(&models.User{}).Count(&totalUser)
@@ -39,21 +64,82 @@ func (AdminController) Dashboard(c *fiber.Ctx) error {
 	dayNames := []string{"Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"}
 	barData := []fiber.Map{}
 	var barMax int64
-	for i := 6; i >= 0; i-- {
-		day := time.Now().AddDate(0, 0, -i)
-		dayStart := day.Format("2006-01-02")
-		dayEnd := day.AddDate(0, 0, 1).Format("2006-01-02")
-		var count int64
-		database.DB.Model(&models.Transaksi{}).
-			Where("created_at >= ? AND created_at < ?", dayStart, dayEnd).
-			Count(&count)
-		if count > barMax {
-			barMax = count
+	loc := time.Now().Location()
+	now := time.Now()
+
+	switch r {
+	case "day":
+		periods := []struct {
+			label string
+			hFrom int
+			hTo   int
+		}{
+			{"Pagi", 6, 12},
+			{"Siang", 12, 15},
+			{"Sore", 15, 18},
+			{"Malam", 18, 24},
 		}
-		barData = append(barData, fiber.Map{
-			"Label": dayNames[day.Weekday()],
-			"Value": count,
-		})
+		for _, p := range periods {
+			start := time.Date(now.Year(), now.Month(), now.Day(), p.hFrom, 0, 0, 0, loc)
+			end := time.Date(now.Year(), now.Month(), now.Day(), p.hTo, 0, 0, 0, loc)
+			var count int64
+			database.DB.Model(&models.Transaksi{}).
+				Where("created_at >= ? AND created_at < ?", start, end).
+				Count(&count)
+			if count > barMax {
+				barMax = count
+			}
+			barData = append(barData, fiber.Map{
+				"Label": fmt.Sprintf("%s (%02d-%02d)", p.label, p.hFrom, p.hTo-1),
+				"Value": count,
+			})
+		}
+
+	case "month":
+		lastDay := time.Date(now.Year(), now.Month()+1, 0, 0, 0, 0, 0, loc).Day()
+		// batasi hingga hari ini
+		today := now.Day()
+		if lastDay > today {
+			lastDay = today
+		}
+		for weekStart := 1; weekStart <= lastDay; weekStart += 7 {
+			weekEnd := weekStart + 6
+			if weekEnd > lastDay {
+				weekEnd = lastDay
+			}
+			s := time.Date(now.Year(), now.Month(), weekStart, 0, 0, 0, 0, loc)
+			e := time.Date(now.Year(), now.Month(), weekEnd+1, 0, 0, 0, 0, loc)
+			var count int64
+			database.DB.Model(&models.Transaksi{}).
+				Where("created_at >= ? AND created_at < ?", s, e).
+				Count(&count)
+			if count > barMax {
+				barMax = count
+			}
+			label := fmt.Sprintf("%d-%d %s", weekStart, weekEnd, s.Format("Jan"))
+			barData = append(barData, fiber.Map{
+				"Label": label,
+				"Value": count,
+			})
+		}
+
+	default: // week
+		for i := 6; i >= 0; i-- {
+			day := time.Now().AddDate(0, 0, -i)
+			dayStart := day.Format("2006-01-02")
+			dayEnd := day.AddDate(0, 0, 1).Format("2006-01-02")
+			var count int64
+			database.DB.Model(&models.Transaksi{}).
+				Where("created_at >= ? AND created_at < ?", dayStart, dayEnd).
+				Count(&count)
+			if count > barMax {
+				barMax = count
+			}
+			barData = append(barData, fiber.Map{
+				"Label": dayNames[day.Weekday()],
+				"Value": count,
+			})
+		}
 	}
 	// Hitung persentase untuk setiap bar
 	for i := range barData {
@@ -65,6 +151,13 @@ func (AdminController) Dashboard(c *fiber.Ctx) error {
 		barData[i]["Pct"] = pct
 	}
 
+	barTitle := "Penjualan 7 Hari Terakhir"
+	if r == "day" {
+		barTitle = "Penjualan Hari Ini"
+	} else if r == "month" {
+		barTitle = "Penjualan 30 Hari Terakhir"
+	}
+
 	type FilmSold struct {
 		ID         uint
 		Judul      string
@@ -74,12 +167,14 @@ func (AdminController) Dashboard(c *fiber.Ctx) error {
 	database.DB.Raw(`
 		SELECT f.id, f.judul, COUNT(t.id) as total_tiket
 		FROM tikets t
+		JOIN transaksis tr ON tr.id = t.transaksi_id
 		JOIN schedules s ON s.id = t.jadwal_id
 		JOIN films f ON f.id = s.film_id
+		WHERE tr.created_at >= ?
 		GROUP BY f.id, f.judul
 		ORDER BY total_tiket DESC
 		LIMIT 5
-	`).Scan(&topFilms)
+	`, since).Scan(&topFilms)
 
 	topFilmsList := make([]fiber.Map, 0, len(topFilms))
 	for _, f := range topFilms {
@@ -96,16 +191,31 @@ func (AdminController) Dashboard(c *fiber.Ctx) error {
 		"Stats":    stats,
 		"BarData":  barData,
 		"TopFilms": topFilmsList,
+		"Range":    r,
+		"BarTitle": barTitle,
 	}, "layouts/admin")
 }
 
 func (AdminController) FilmIndex(c *fiber.Ctx) error {
+	q := c.Query("q")
+	status := c.Query("status")
+
+	query := database.DB
+	if q != "" {
+		query = query.Where("judul LIKE ?", "%"+q+"%")
+	}
+	if status != "" && status != "all" {
+		query = query.Where("status = ?", status)
+	}
+
 	var films []models.Film
-	database.DB.Find(&films)
+	query.Find(&films)
 	return c.Render("admin/film/index", fiber.Map{
 		"Title":  "Manajemen Film",
 		"Active": "film",
 		"Films":  films,
+		"Q":      q,
+		"Status": status,
 	}, "layouts/admin")
 }
 
@@ -179,15 +289,23 @@ func (AdminController) FilmHapus(c *fiber.Ctx) error {
 }
 
 func (AdminController) JadwalIndex(c *fiber.Ctx) error {
+	q := c.Query("q")
+
+	query := database.DB.Preload("Film").Preload("Studio")
+	if q != "" {
+		query = query.
+			Joins("JOIN films ON films.id = schedules.film_id").
+			Joins("JOIN studios ON studios.id = schedules.studio_id").
+			Where("films.judul LIKE ? OR studios.nama_studio LIKE ?", "%"+q+"%", "%"+q+"%")
+	}
+
 	var jadwals []models.Schedule
-	database.DB.
-		Preload("Film").
-		Preload("Studio").
-		Find(&jadwals)
+	query.Find(&jadwals)
 	return c.Render("admin/jadwal/index", fiber.Map{
 		"Title":   "Jadwal Tayang",
 		"Active":  "jadwal",
 		"Jadwals": jadwals,
+		"Q":       q,
 	}, "layouts/admin")
 }
 
@@ -271,10 +389,17 @@ func (AdminController) JadwalHapus(c *fiber.Ctx) error {
 }
 
 func (AdminController) StudioIndex(c *fiber.Ctx) error {
+	q := c.Query("q")
+
+	query := database.DB
+	if q != "" {
+		query = query.Where("nama_studio LIKE ?", "%"+q+"%")
+	}
+
 	var studios []models.Studio
-	database.DB.Find(&studios)
+	query.Find(&studios)
 	return c.Render("admin/studio/index", fiber.Map{
-		"Title": "Manajemen Studio", "Active": "studio", "Studios": studios,
+		"Title": "Manajemen Studio", "Active": "studio", "Studios": studios, "Q": q,
 	}, "layouts/admin")
 }
 
@@ -335,11 +460,31 @@ func (AdminController) StudioHapus(c *fiber.Ctx) error {
 }
 
 func (AdminController) TransaksiIndex(c *fiber.Ctx) error {
-	var transaksis []models.Transaksi
-	database.DB.
+	q := c.Query("q")
+	tanggal := c.Query("tanggal")
+
+	query := database.DB.
 		Preload("User").
 		Preload("Schedule.Film").
-		Preload("Schedule.Studio").
+		Preload("Schedule.Studio")
+
+	if q != "" {
+		var userIDs []uint
+		database.DB.Model(&models.User{}).Where("nama LIKE ?", "%"+q+"%").Pluck("id", &userIDs)
+		query = query.Where("kode_booking LIKE ? OR user_id IN ?", "%"+q+"%", userIDs)
+	}
+
+	if tanggal != "" {
+		t, err := time.Parse("2006-01-02", tanggal)
+		if err == nil {
+			start := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.UTC)
+			end := start.AddDate(0, 0, 1)
+			query = query.Where("created_at >= ? AND created_at < ?", start, end)
+		}
+	}
+
+	var transaksis []models.Transaksi
+	query.
 		Order("created_at DESC").
 		Find(&transaksis)
 
@@ -368,7 +513,7 @@ func (AdminController) TransaksiIndex(c *fiber.Ctx) error {
 	}
 
 	return c.Render("admin/transaksi/index", fiber.Map{
-		"Title": "Transaksi", "Active": "transaksi", "Transaksis": items,
+		"Title": "Transaksi", "Active": "transaksi", "Transaksis": items, "Q": q, "Tanggal": tanggal,
 	}, "layouts/admin")
 }
 
@@ -415,12 +560,24 @@ func (AdminController) TransaksiDetail(c *fiber.Ctx) error {
 }
 
 func (AdminController) UserIndex(c *fiber.Ctx) error {
+	q := c.Query("q")
+	role := c.Query("role")
+	adminID, _ := strconv.Atoi(c.Cookies("user_id"))
+
+	query := database.DB
+	if q != "" {
+		query = query.Where("nama LIKE ? OR email LIKE ?", "%"+q+"%", "%"+q+"%")
+	}
+	if role != "" && role != "all" {
+		query = query.Where("role = ?", role)
+	}
+
 	var users []models.User
-	if err := database.DB.Find(&users).Error; err != nil {
+	if err := query.Find(&users).Error; err != nil {
 		return c.SendString("Gagal mengambil data user")
 	}
 	return c.Render("admin/user/index", fiber.Map{
-		"Title": "Manajemen User", "Active": "user", "Users": users,
+		"Title": "Manajemen User", "Active": "user", "Users": users, "Q": q, "Role": role, "AdminID": adminID,
 	}, "layouts/admin")
 }
 
@@ -432,12 +589,20 @@ func (AdminController) JadikanAdmin(c *fiber.Ctx) error {
 
 func (AdminController) JadikanUser(c *fiber.Ctx) error {
 	id, _ := strconv.Atoi(c.Params("id"))
+	adminID, _ := strconv.Atoi(c.Cookies("user_id"))
+	if id == adminID {
+		return c.Redirect("/admin/user")
+	}
 	database.DB.Model(&models.User{}).Where("id = ?", id).Update("role", "user")
 	return c.Redirect("/admin/user")
 }
 
 func (AdminController) UserHapus(c *fiber.Ctx) error {
 	id, _ := strconv.Atoi(c.Params("id"))
+	adminID, _ := strconv.Atoi(c.Cookies("user_id"))
+	if id == adminID {
+		return c.Redirect("/admin/user")
+	}
 	database.DB.Delete(&models.User{}, id)
 	return c.Redirect("/admin/user")
 }

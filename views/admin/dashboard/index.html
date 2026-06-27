@@ -6,15 +6,15 @@
       <p class="text-primary/70 text-[12px] sm:text-[14px]">Selamat datang kembali, Admin! Berikut ringkasan aktivitas hari ini.</p>
     </div>
     <div class="flex items-center gap-1.5 sm:gap-2 bg-dark-soft border border-primary/30 rounded-xl p-1 self-start sm:self-auto">
-      <button data-range="day" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary text-dark text-[11px] sm:text-[12px] font-bold">
+      <a href="?range=day" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg {{if eq .Range "day"}}bg-primary text-dark{{else}}text-primary{{end}} text-[11px] sm:text-[12px] {{if eq .Range "day"}}font-bold{{else}}font-semibold{{end}}">
         Hari Ini
-      </button>
-      <button data-range="week" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-primary text-[11px] sm:text-[12px] font-semibold">
+      </a>
+      <a href="?range=week" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg {{if or (eq .Range "week") (eq .Range "")}}bg-primary text-dark{{else}}text-primary{{end}} text-[11px] sm:text-[12px] {{if or (eq .Range "week") (eq .Range "")}}font-bold{{else}}font-semibold{{end}}">
         Minggu Ini
-      </button>
-      <button data-range="month" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-primary text-[11px] sm:text-[12px] font-semibold">
+      </a>
+      <a href="?range=month" class="range-btn px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg {{if eq .Range "month"}}bg-primary text-dark{{else}}text-primary{{end}} text-[11px] sm:text-[12px] {{if eq .Range "month"}}font-bold{{else}}font-semibold{{end}}">
         Bulan Ini
-      </button>
+      </a>
     </div>
   </div>
 
@@ -36,7 +36,7 @@
     <div class="xl:col-span-2 bg-dark border border-primary/30 rounded-2xl p-5 sm:p-6 flex flex-col gap-4 sm:gap-5 h-full">
       <div class="flex items-center justify-between flex-wrap gap-2">
         <div class="flex flex-col gap-0.5">
-          <h2 class="text-primary font-bold text-[16px] sm:text-[18px]">Penjualan 7 Hari Terakhir</h2>
+          <h2 class="text-primary font-bold text-[16px] sm:text-[18px]">{{.BarTitle}}</h2>
           <p class="text-primary/60 text-[11px] sm:text-[12px]">Statistik penjualan tiket bioskop</p>
         </div>
         <div class="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-[11px]">
@@ -74,18 +74,3 @@
   </div>
 </div>
 
-<script>
-(function() {
-  const btns = document.querySelectorAll('.range-btn');
-  btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btns.forEach(b => {
-        b.classList.remove('bg-primary', 'text-dark');
-        b.classList.add('text-primary', 'font-semibold');
-      });
-      btn.classList.add('bg-primary', 'text-dark');
-      btn.classList.remove('text-primary', 'font-semibold');
-    });
-  });
-})();
-</script>
