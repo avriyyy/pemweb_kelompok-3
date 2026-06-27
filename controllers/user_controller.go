@@ -176,7 +176,7 @@ func (UserController) TiketIndex(c *fiber.Ctx) error {
 	for _, j := range schedules {
 		key := fmt.Sprintf("%d|%s", j.FilmID, j.TanggalTayang.Format("2006-01-02"))
 		tanggalStr := j.TanggalTayang.Format("2 Jan 2006")
-		hargaNumStr := fmt.Sprintf("%.0f", j.Harga)
+		hargaNumStr := models.FormatRupiah(int(j.Harga))
 
 		if existing, ok := groupMap[key]; ok {
 			existing.Jams = append(existing.Jams, j.JamTayang)
@@ -593,6 +593,7 @@ func (UserController) TiketBerhasil(c *fiber.Ctx) error {
 		"Jam":         jamStr,
 		"Studio":      studioStr,
 		"Tipe":        transaksi.Schedule.Studio.Tipe,
+		"Poster":      transaksi.Schedule.Film.Poster,
 	}, "layouts/user")
 }
 

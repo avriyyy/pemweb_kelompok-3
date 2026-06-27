@@ -14,9 +14,7 @@
     </div>
 
     <div class="flex items-center gap-3 sm:gap-4">
-      <div class="bg-primary w-14 h-20 sm:w-20 sm:h-28 rounded-md sm:rounded-[10px] flex items-end p-1.5 sm:p-2 flex-shrink-0">
-        <span class="text-dark text-[9px] sm:text-[10px] font-bold opacity-70">{{.Tipe}}</span>
-      </div>
+      <div class="w-14 h-20 sm:w-20 sm:h-28 rounded-md sm:rounded-[10px] bg-cover bg-center flex-shrink-0" style="background-image: url('{{.Poster}}')"></div>
       <div class="flex flex-col gap-0.5 sm:gap-1 min-w-0">
         <h2 class="text-primary font-extrabold text-[15px] sm:text-[18px]">{{.Judul}}</h2>
         <p class="text-primary text-[11px] sm:text-[12px] opacity-60">{{.Genre}} - {{.Durasi}}</p>
