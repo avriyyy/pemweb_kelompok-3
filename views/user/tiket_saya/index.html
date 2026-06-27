@@ -6,7 +6,7 @@
 <section class="bg-dark px-5 sm:px-10 lg:px-16 py-3 sm:py-4 flex items-center gap-2 overflow-x-auto">
   <button class="bg-primary text-dark font-bold text-[12px] sm:text-[13px] rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center gap-2 flex-shrink-0">
     <span>Semua</span>
-    <span class="bg-dark text-primary text-[10px] sm:text-[11px] font-bold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">3</span>
+    <span class="bg-dark text-primary text-[10px] sm:text-[11px] font-bold rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">{{len .Tickets}}</span>
   </button>
   <button class="border border-primary/30 text-primary text-[12px] sm:text-[13px] font-medium rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex-shrink-0 hover:bg-white/5 transition">Aktif</button>
   <button class="border border-primary/30 text-primary text-[12px] sm:text-[13px] font-medium rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex-shrink-0 hover:bg-white/5 transition">Selesai</button>
@@ -31,8 +31,8 @@
       <span>Terlewat</span>
     </span>
     {{end}}
-    <div class="relative {{.PosterColor}} rounded-lg sm:rounded-xl h-[160px] sm:h-[170px] w-full sm:w-[120px] flex-shrink-0 overflow-hidden">
-      <img src="https://picsum.photos/seed/{{.FilmID}}/400/600" alt="{{.Judul}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />
+    <div class="relative bg-dark-soft rounded-lg sm:rounded-xl h-[160px] sm:h-[170px] w-full sm:w-[120px] flex-shrink-0 overflow-hidden">
+      {{if .Poster}}<img src="{{.Poster}}" alt="{{.Judul}}" loading="lazy" class="absolute inset-0 w-full h-full object-cover" />{{end}}
     </div>
     <div class="flex-1 w-full flex flex-col gap-2.5 sm:gap-3 min-w-0">
       <div class="flex flex-col gap-0.5 sm:gap-1">
@@ -75,7 +75,7 @@
         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
       </a>
       {{else if eq .Status "Pending"}}
-      <a href="/tiket/bayar/{{.ID}}" class="bg-primary text-dark font-bold text-[12px] sm:text-[13px] rounded-[10px] px-4 sm:px-5 py-2.5 sm:py-3 flex items-center gap-1.5 hover:bg-primary-hover transition">
+      <a href="/tiket/bayar-ulang/{{.ID}}" class="bg-primary text-dark font-bold text-[12px] sm:text-[13px] rounded-[10px] px-4 sm:px-5 py-2.5 sm:py-3 flex items-center gap-1.5 hover:bg-primary-hover transition">
         <span>Bayar Sekarang</span>
         <i data-lucide="credit-card" class="w-3.5 h-3.5"></i>
       </a>
@@ -95,5 +95,13 @@
       {{end}}
     </div>
   </article>
+  {{end}}
+  {{if not .Tickets}}
+  <div class="flex flex-col items-center justify-center gap-2 py-16 bg-dark-soft border border-primary/20 rounded-2xl">
+    <i data-lucide="ticket-x" class="w-10 h-10 text-primary/40"></i>
+    <p class="text-primary text-[14px] font-semibold">Belum ada tiket</p>
+    <p class="text-primary/60 text-[12px]">Ayo beli tiket film favorit Anda!</p>
+    <a href="/tiket" class="mt-2 bg-primary text-dark font-bold text-[13px] rounded-lg px-5 py-2.5">Pesan Tiket</a>
+  </div>
   {{end}}
 </section>

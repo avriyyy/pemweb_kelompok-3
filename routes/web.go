@@ -41,6 +41,10 @@ func Web(app *fiber.App) {
 		middleware.AuthOnly(),
 		usr.TiketBayarSubmit)
 
+	app.Get("/tiket/bayar-ulang/:id",
+		middleware.AuthOnly(),
+		usr.TiketBayarUlang)
+
 	app.Get("/tiket/berhasil/:id",
 		middleware.AuthOnly(),
 		usr.TiketBerhasil)

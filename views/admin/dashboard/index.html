@@ -47,41 +47,13 @@
         </div>
       </div>
       <div class="flex items-end gap-2 sm:gap-3 lg:gap-4 h-[180px] sm:h-[220px]">
+        {{range .BarData}}
         <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">72</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 60%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">SEN</span>
+          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">{{.Value}}</span>
+          <div class="w-full bg-primary rounded-t-md" style="height: {{.Pct}}%"></div>
+          <span class="text-primary/50 text-[10px] sm:text-[11px]">{{.Label}}</span>
         </div>
-        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">96</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 80%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">SEL</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">54</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 45%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">RAB</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">120</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 100%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">KAM</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">90</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 75%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">JUM</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">108</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 90%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">SAB</span>
-        </div>
-        <div class="flex-1 flex flex-col items-center gap-1.5 sm:gap-2 justify-end h-full">
-          <span class="text-primary text-[10px] sm:text-[11px] font-bold opacity-70">84</span>
-          <div class="w-full bg-primary rounded-t-md" style="height: 70%"></div>
-          <span class="text-primary/50 text-[10px] sm:text-[11px]">MIN</span>
-        </div>
+        {{end}}
       </div>
     </div>
 

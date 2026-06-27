@@ -12,7 +12,7 @@
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 pt-2 lg:pt-4">
           <div class="min-w-0">
             <span class="block text-primary text-[10px] sm:text-[11px] opacity-60 uppercase tracking-wider">Tanggal</span>
-            <span class="block text-primary text-[13px] sm:text-[14px] lg:text-[15px] font-bold mt-1 truncate">Senin, 23 Juni 2026</span>
+            <span class="block text-primary text-[13px] sm:text-[14px] lg:text-[15px] font-bold mt-1 truncate">{{.Tanggal}}</span>
           </div>
           <div class="min-w-0">
             <span class="block text-primary text-[10px] sm:text-[11px] opacity-60 uppercase tracking-wider">Jam Tayang</span>
@@ -35,10 +35,10 @@
       {{if .Times}}
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
         {{range .Times}}
-        <button class="time-btn bg-dark {{if .Active}}border-2 border-primary{{else}}border border-primary/30{{end}} rounded-lg sm:rounded-xl py-3 sm:py-4 px-2 sm:px-3 flex flex-col gap-1.5 hover:border-primary transition min-w-0 w-full" data-jam="{{.Jam}}" data-studio="{{.Studio}}" data-tipe="{{.Tipe}}" data-harga="{{.Harga}}">
+        <button class="time-btn bg-dark {{if .Active}}border-2 border-primary{{else}}border border-primary/30{{end}} rounded-lg sm:rounded-xl py-3 sm:py-4 px-2 sm:px-3 flex flex-col gap-1.5 hover:border-primary transition min-w-0 w-full" data-jam="{{.Jam}}" data-studio="{{.Studio}}" data-tipe="{{.Tipe}}" data-harga="{{.Harga}}" data-schedule-id="{{.ScheduleID}}">
           <div class="flex items-baseline justify-between w-full gap-1">
             <span class="text-primary text-[18px] sm:text-[22px] lg:text-[24px] font-extrabold {{if not .Active}}opacity-60{{end}}">{{.Jam}}</span>
-            <span class="text-primary text-[10px] sm:text-[11px] font-bold whitespace-nowrap">Rp {{.Harga}}</span>
+            <span class="text-primary text-[10px] sm:text-[11px] font-bold whitespace-nowrap">Rp {{.HargaFmt}}</span>
           </div>
           <div class="flex items-center justify-between w-full gap-1">
             <span class="text-primary text-[10px] sm:text-[11px] font-semibold truncate min-w-0">{{.Studio}}</span>
@@ -124,7 +124,7 @@
     <div class="bg-primary border border-primary/40 rounded-2xl p-5 sm:p-6 flex flex-col gap-2.5 sm:gap-3 shadow-lg shadow-black/40">
       <span class="text-dark text-[12px] sm:text-[13px] font-bold tracking-[1.5px] opacity-70">RINGKASAN PESANAN</span>
       <div class="flex items-center justify-between">
-        <span id="seat-count" class="text-dark text-[12px] sm:text-[13px]">0 × Kursi Reguler</span>
+        <span id="seat-count" class="text-dark text-[12px] sm:text-[13px]">0 × Kursi</span>
         <span id="subtotal" class="text-dark text-[12px] sm:text-[13px] font-semibold">Rp 0</span>
       </div>
       <div class="h-px bg-dark/20 my-0.5"></div>
@@ -134,7 +134,7 @@
       </div>
       <form method="POST" action="/tiket/beli/{{.ID}}" id="checkout-form" class="mt-1">
         <input type="hidden" name="seats" id="seats-input" value="" />
-        <input type="hidden" name="time" id="time-input" value="18:00" />
+        <input type="hidden" name="schedule_id" id="schedule-id-input" value="" />
         <button type="submit" class="w-full h-11 sm:h-12 bg-dark text-primary font-bold text-[13px] sm:text-[14px] rounded-lg sm:rounded-xl flex items-center justify-center gap-2 hover:bg-dark-elevated transition">
           <span>Lanjut ke Pembayaran</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -145,8 +145,8 @@
 </div>
 
 <script>
-let currentHarga = 50000;
-let currentTipe = 'Premiere';
+let currentHarga = 0;
+let currentTipe = '';
 
 document.querySelectorAll('.time-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -158,8 +158,9 @@ document.querySelectorAll('.time-btn').forEach(btn => {
     btn.classList.add('border-2', 'border-primary');
     currentHarga = parseInt(btn.dataset.harga);
     currentTipe = btn.dataset.tipe;
-    const studio = btn.dataset.studio;
-    const gridKey = studio + '|' + currentTipe;
+    const scheduleId = btn.dataset.scheduleId;
+    const gridKey = 'sched-' + scheduleId;
+    document.getElementById('schedule-id-input').value = scheduleId;
     document.querySelectorAll('[data-grid]').forEach(g => {
       if (g.dataset.grid === gridKey) {
         g.classList.remove('hidden');
@@ -175,7 +176,7 @@ document.querySelectorAll('.time-btn').forEach(btn => {
     });
     selected = [];
     document.getElementById('info-jam').textContent = btn.dataset.jam + ' WIB';
-    document.getElementById('info-studio').textContent = studio;
+    document.getElementById('info-studio').textContent = btn.dataset.studio;
     document.getElementById('info-tipe').textContent = currentTipe;
     render();
   });
@@ -222,6 +223,19 @@ function render() {
   totalEl.textContent = 'Rp ' + sub.toLocaleString('id-ID');
   grandEl.textContent = 'Rp ' + sub.toLocaleString('id-ID');
   seatsInput.value = selected.join(',');
+}
+
+const firstActive = document.querySelector('.time-btn.border-2, .time-btn.border-primary:not(.border-primary\\/30)');
+if (firstActive) {
+  if (firstActive.dataset.scheduleId) {
+    document.getElementById('schedule-id-input').value = firstActive.dataset.scheduleId;
+  }
+  if (firstActive.dataset.harga) {
+    currentHarga = parseInt(firstActive.dataset.harga);
+  }
+  if (firstActive.dataset.tipe) {
+    currentTipe = firstActive.dataset.tipe;
+  }
 }
 
 form.addEventListener('submit', e => {

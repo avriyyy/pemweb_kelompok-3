@@ -10,6 +10,7 @@
         <h2 class="text-primary font-extrabold text-[18px] sm:text-[20px] lg:text-[22px]">Data Diri Anda</h2>
       </div>
       <form method="POST" action="/tiket/bayar/{{.ID}}" id="pay-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
+        <input type="hidden" name="seats" value="{{.SeatsStr}}">
         <div class="flex flex-col gap-2 sm:col-span-2">
           <label class="text-primary text-[12px] sm:text-[13px] font-semibold">Nama Lengkap</label>
           <input name="nama" type="text" required placeholder="Nama Anda" value="{{.Nama}}"
@@ -32,21 +33,17 @@
         <span class="text-primary text-[11px] sm:text-[12px] font-bold tracking-[1.5px]">METODE PEMBAYARAN</span>
         <h2 class="text-primary font-extrabold text-[18px] sm:text-[20px] lg:text-[22px]">Pilih Cara Bayar</h2>
       </div>
-      <div class="flex flex-col gap-2 sm:gap-2.5">
-        {{range .Payments}}
-        <label class="flex items-center gap-3 p-3 sm:p-4 {{if .Active}}bg-primary border-2 border-primary{{else}}bg-dark border border-primary/30{{end}} rounded-xl cursor-pointer hover:border-primary transition">
-          <input type="radio" name="payment" value="{{.Kode}}" {{if .Active}}checked{{end}} class="hidden" />
-          <div class="w-10 h-10 sm:w-12 sm:h-12 {{if .Active}}bg-dark{{else}}bg-primary{{end}} rounded-lg flex items-center justify-center flex-shrink-0">
-            <i data-lucide="{{.Icon}}" class="w-4 h-4 sm:w-5 sm:h-5 {{if .Active}}text-primary{{else}}text-dark{{end}}"></i>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="{{if .Active}}text-dark{{else}}text-primary{{end}} font-bold text-[13px] sm:text-[14px]">{{.Nama}}</p>
-            <p class="{{if .Active}}text-dark/70{{else}}text-primary/60{{end}} text-[11px] sm:text-[12px] truncate">{{.Keterangan}}</p>
-          </div>
-          <i data-lucide="circle" class="w-4 h-4 sm:w-5 sm:h-5 {{if .Active}}text-dark{{else}}text-primary opacity-30{{end}} {{if .Active}}fill-current{{end}} flex-shrink-0"></i>
-        </label>
-        {{end}}
+      <div class="flex items-center gap-3 p-3 sm:p-4 bg-dark-soft border-2 border-primary rounded-xl">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+          <i data-lucide="qr-code" class="w-4 h-4 sm:w-5 sm:h-5 text-dark"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-primary font-bold text-[13px] sm:text-[14px]">QRIS</p>
+          <p class="text-primary/70 text-[11px] sm:text-[12px]">Scan QR dari aplikasi pembayaran apa pun</p>
+        </div>
+        <i data-lucide="circle" class="w-4 h-4 sm:w-5 sm:h-5 text-primary fill-current flex-shrink-0"></i>
       </div>
+      <input type="hidden" name="payment" value="qris">
       </form>
     </section>
   </main>
@@ -88,3 +85,7 @@
     </div>
   </aside>
 </div>
+
+<script>
+if (window.lucide) window.lucide.createIcons();
+</script>
