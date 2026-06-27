@@ -18,8 +18,8 @@
     </div>
     <select name="status" onchange="this.form.submit()" class="h-10 sm:h-11 px-3 sm:px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] font-semibold focus:outline-none cursor-pointer">
       <option value="all" {{if eq .Status "all"}}selected{{end}}>Semua Status</option>
-      <option value="Aktif" {{if eq .Status "Aktif"}}selected{{end}}>Aktif</option>
-      <option value="Tidak Aktif" {{if eq .Status "Tidak Aktif"}}selected{{end}}>Tidak Aktif</option>
+      <option value="active" {{if eq .Status "active"}}selected{{end}}>Aktif</option>
+      <option value="inactive" {{if eq .Status "inactive"}}selected{{end}}>Tidak Aktif</option>
     </select>
   </form>
 
@@ -53,10 +53,10 @@
               <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.Genre}}</span>
             </td>
             <td class="px-3 sm:px-4 py-3 sm:py-3.5 hidden lg:table-cell">
-              <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.Durasi}}</span>
+              <span class="text-primary/80 text-[12px] sm:text-[13px]">{{.Durasi}}m</span>
             </td>
             <td class="px-3 sm:px-4 py-3 sm:py-3.5">
-              {{if eq .Status "Aktif"}}
+              {{if eq .Status "active"}}
               <span class="inline-block bg-primary text-dark text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">Aktif</span>
               {{else}}
               <span class="inline-block bg-primary/20 text-primary text-[10px] sm:text-[11px] font-bold rounded-full px-2.5 py-0.5">Tidak Aktif</span>

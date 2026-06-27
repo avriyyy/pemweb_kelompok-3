@@ -55,24 +55,12 @@
           </div>
           <div class="flex flex-col gap-1.5">
             <div class="flex items-center gap-1">
-              <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">DURASI</label>
+              <label class="text-primary text-[11px] sm:text-[12px] font-semibold tracking-[0.5px]">DURASI (M)</label>
               <span class="text-primary opacity-50 text-[11px]">*</span>
             </div>
             <input name="durasi" type="number" required value="{{.Film.Durasi}}"
               class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary text-[12px] sm:text-[13px] focus:outline-none focus:border-primary transition-colors" />
           </div>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <label class="text-primary text-[12px] font-semibold">
-            HARGA
-          </label>
-
-          <input
-            type="number"
-            name="harga"
-            value="{{.Film.Harga}}"
-            required
-            class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg">
         </div>
         <div class="flex flex-col gap-1.5">
           <label class="text-primary text-[11px] sm:text-[12px] font-semibold">
@@ -104,8 +92,8 @@
             name="status"
             class="h-11 px-4 bg-dark-soft border border-primary/40 rounded-lg text-primary">
 
-            <option value="Aktif">Aktif</option>
-            <option value="Tidak Aktif">Tidak Aktif</option>
+            <option value="active">Aktif</option>
+            <option value="inactive">Tidak Aktif</option>
 
           </select>
         </div>

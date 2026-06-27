@@ -31,7 +31,7 @@ func (UserController) Beranda(c *fiber.Ctx) error {
 			"ID":       fmt.Sprintf("%d", m.ID),
 			"Judul":    m.Judul,
 			"Genre":    m.Genre,
-			"Durasi":   fmt.Sprintf("%dj %dm", m.Durasi/60, m.Durasi%60),
+			"Durasi":   fmt.Sprintf("%dm", m.Durasi),
 			"Rating":   m.Rating,
 			"Synopsis": m.Sinopsis,
 			"Poster":   m.Poster,
@@ -84,7 +84,7 @@ func (UserController) Beranda(c *fiber.Ctx) error {
 		if nextJam != "" && nextDiff <= 6*60 {
 			soon = append(soon, soonItem{
 				ID: fmt.Sprintf("%d", m.ID), Judul: m.Judul, Genre: m.Genre,
-				Durasi: fmt.Sprintf("%dj %dm", m.Durasi/60, m.Durasi%60),
+				Durasi: fmt.Sprintf("%dm", m.Durasi),
 				Poster: m.Poster, Jam: nextJam, SoonIn: nextDiff,
 			})
 		}
@@ -375,7 +375,7 @@ func (UserController) TiketBeli(c *fiber.Ctx) error {
 			"ID":          film.ID,
 			"Judul":       film.Judul,
 			"Genre":       film.Genre,
-			"Durasi":      fmt.Sprintf("%dj %dm", film.Durasi/60, film.Durasi%60),
+			"Durasi":      fmt.Sprintf("%dm", film.Durasi),
 			"Synopsis":    film.Sinopsis,
 			"Rating":      film.Rating,
 			"Poster":      film.Poster,
@@ -484,7 +484,7 @@ func (UserController) TiketBayar(c *fiber.Ctx) error {
 		"Email":     user.Email,
 		"ID":        id,
 		"Judul":     schedule.Film.Judul,
-		"Genre":     fmt.Sprintf("%s, %dj %dm", schedule.Film.Genre, schedule.Film.Durasi/60, schedule.Film.Durasi%60),
+		"Genre":     fmt.Sprintf("%s, %dm", schedule.Film.Genre, schedule.Film.Durasi),
 		"Tanggal":   tanggalStr,
 		"Jam":       schedule.JamTayang,
 		"Studio":    studioStr,
@@ -572,7 +572,7 @@ func (UserController) TiketBerhasil(c *fiber.Ctx) error {
 	jamStr := transaksi.Schedule.JamTayang + " WIB"
 	studioStr := fmt.Sprintf("%s · %s", transaksi.Schedule.Studio.NamaStudio, transaksi.Schedule.Studio.Tipe)
 
-	durasiStr := fmt.Sprintf("%dj %dm", transaksi.Schedule.Film.Durasi/60, transaksi.Schedule.Film.Durasi%60)
+	durasiStr := fmt.Sprintf("%dm", transaksi.Schedule.Film.Durasi)
 
 	return c.Render("user/tiket/berhasil", fiber.Map{
 		"Title":       "Pembayaran Berhasil",
@@ -646,7 +646,7 @@ func (UserController) TiketSaya(c *fiber.Ctx) error {
 		for _, t := range trx.Tiket {
 			seats = append(seats, t.NomorKursi)
 		}
-		durasi := fmt.Sprintf("%dj %dm", trx.Schedule.Film.Durasi/60, trx.Schedule.Film.Durasi%60)
+		durasi := fmt.Sprintf("%dm", trx.Schedule.Film.Durasi)
 		tanggalStr := trx.Schedule.TanggalTayang.Format("2 Jan 2006")
 
 		tickets = append(tickets, ticketItem{
@@ -716,7 +716,7 @@ func (UserController) LihatTiket(c *fiber.Ctx) error {
 		status = "Lunas"
 	}
 
-	durasi := fmt.Sprintf("%dj %dm", transaksi.Schedule.Film.Durasi/60, transaksi.Schedule.Film.Durasi%60)
+	durasi := fmt.Sprintf("%dm", transaksi.Schedule.Film.Durasi)
 	genre := fmt.Sprintf("%s · %s · %s", transaksi.Schedule.Film.Genre, durasi, transaksi.Schedule.Studio.Tipe)
 	tanggalStr := transaksi.Schedule.TanggalTayang.Format("Monday, 2 January 2006")
 	jamStr := jamISO + " WIB"
