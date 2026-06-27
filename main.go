@@ -37,8 +37,8 @@ func main() {
 	)
 	routes.Web(app)
 
-	log.Println("TokTik running on port 3000")
-	if err := app.Listen("0.0.0.0:3000"); err != nil {
+	log.Println("TokTik running on port 3334")
+	if err := app.Listen("0.0.0.0:3334"); err != nil {
 		log.Fatal(err)
 	}
 }
